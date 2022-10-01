@@ -10,6 +10,7 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/day_sky_start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -18,7 +19,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/day_sky_start"
             android:minHeight="?attr/actionBarSize">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,19 +31,33 @@
                     android:id="@+id/citySelection"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="4dp"
                     android:background="@android:color/transparent"
                     android:text="Севастополь"
                     android:textAlignment="viewStart"
                     android:textAllCaps="false"
-                    android:textColor="@color/dark"
+                    android:textColor="@color/smoky_sky"
                     android:textSize="18sp"
                     android:typeface="normal"
                     app:icon="@drawable/ic_location"
-                    app:iconTint="@color/dark"
+                    app:iconTint="@color/smoky_sky"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/reload"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/reload"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/ic_refresh"
+                    android:backgroundTint="@color/dark"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    app:backgroundTint="@color/smoky_sky"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -53,6 +68,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/smoky_sky"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +77,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/errorContent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:visibility="gone">
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -119,7 +136,7 @@
             android:id="@+id/loadingContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:visibility="invisible">
+            tools:visibility="gone">
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -135,112 +152,169 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mainContent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:visibility="invisible">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/weather_icon"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/w_01d" />
-
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="100dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="переменная облачность"
-                android:textAlignment="center"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/weather_icon" />
-
-            <TextView
-                android:id="@+id/feels_like"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="3dp"
-                android:text="Ощущается как "
-                android:textSize="16sp"
-                app:layout_constraintStart_toEndOf="@+id/weather_icon"
-                app:layout_constraintTop_toBottomOf="@+id/current_temperature" />
-
-            <Button
-                android:id="@+id/reload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:backgroundTint="@color/dark"
-                android:text="Обновить данные"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:background="@drawable/day_gradient"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/humidity" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/humidity"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="16dp"
-                android:text="Влажность:"
-                android:textAlignment="textStart"
-                android:textColor="@color/dark"
-                android:textSize="16sp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/constraintLayout2"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/weather_icon"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:layout_constraintBottom_toTopOf="@+id/current_temperature"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/w_01d" />
+
+                    <TextView
+                        android:id="@+id/current_temperature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/centurygothic"
+                        android:text="+21 C"
+                        android:textColor="#c5151719"
+                        android:textSize="34sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/weather_icon"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="@+id/weather_icon"
+                        app:layout_constraintTop_toBottomOf="@+id/weather_icon" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/constraintLayout3"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.555"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:singleLine="false">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/wind_chip"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="2 м/с, В"
+                            android:textColor="@color/smoky_sky"
+                            android:textSize="16sp"
+                            app:chipBackgroundColor="#35000000"
+                            app:chipIcon="@drawable/wind_2"
+                            app:chipIconEnabled="true"
+                            app:chipIconSize="26dp"
+                            app:chipIconVisible="true"
+                            app:chipStrokeColor="@color/dark"
+                            app:chipSurfaceColor="#00000000" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/press_chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="762 мм.рт.ст."
+                            android:textColor="@color/smoky_sky"
+                            android:textSize="16sp"
+                            app:chipBackgroundColor="#35000000"
+                            app:chipIcon="@drawable/pressure"
+                            app:chipIconEnabled="true"
+                            app:chipIconSize="26dp"
+                            app:chipIconVisible="true"
+                            app:chipStrokeColor="@color/dark"
+                            app:chipSurfaceColor="#00000000" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/humidity_chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="57%"
+                            android:textColor="@color/smoky_sky"
+                            android:textSize="16sp"
+                            app:chipBackgroundColor="#35000000"
+                            app:chipIcon="@drawable/humidity"
+                            app:chipIconEnabled="true"
+                            app:chipIconSize="26dp"
+                            app:chipIconVisible="true"
+                            app:chipStrokeColor="@color/dark"
+                            app:chipSurfaceColor="#00000000" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/feeling_chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+20 C"
+                            android:textColor="@color/smoky_sky"
+                            android:textSize="16sp"
+                            app:chipBackgroundColor="#35000000"
+                            app:chipIcon="@drawable/feeling"
+                            app:chipIconEnabled="true"
+                            app:chipIconSize="26dp"
+                            app:chipIconVisible="true"
+                            app:chipStrokeColor="@color/dark"
+                            app:chipSurfaceColor="#00000000" />
+                    </com.google.android.material.chip.ChipGroup>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pressure" />
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
-            <TextView
-                android:id="@+id/pressure"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="Давление:"
-                android:textAlignment="textStart"
-                android:textColor="@color/dark"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/wind_info" />
+                <ListView
+                    android:id="@+id/forecast_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="false"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="16dp"
+                    android:footerDividersEnabled="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/wind_info"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="16dp"
-                android:text="Ветер:"
-                android:textAlignment="textStart"
-                android:textColor="@color/dark"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/description" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/current_temperature"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="35"
-                android:textColor="@color/dark"
-                android:textSize="34sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/weather_icon"
-                app:layout_constraintStart_toEndOf="@+id/weather_icon"
-                app:layout_constraintTop_toTopOf="@+id/weather_icon" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 

@@ -3,13 +3,16 @@ package nav_com.ru.myweather
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.chip.Chip
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import nav_com.ru.myweather.models.ForecastResponse
 import nav_com.ru.myweather.models.WeatherResponse
 import okhttp3.Call
 import okhttp3.Callback
@@ -73,7 +76,11 @@ class MainActivity : AppCompatActivity() {
         val requestUrl =
             "https://api.openweathermap.org/data/2.5/weather?id=" + listOfCityIds[position] + "&appid=ddd069d11b1e504d8268d4ee774ddd64&lang=ru&units=metric"
 
+        val forecastUrl =
+            "https://api.openweathermap.org/data/2.5/forecast?id=" + listOfCityIds[position] + "&appid=ddd069d11b1e504d8268d4ee774ddd64&lang=ru&units=metric"
+
         val request = Request()
+        val forecast = Request()
 
         savePosition(position)
 
@@ -95,29 +102,86 @@ class MainActivity : AppCompatActivity() {
 
                         if (weatherObject.cod == 200) {
                             val currentTemperature = findViewById<TextView>(R.id.current_temperature)
-                            val description = findViewById<TextView>(R.id.description)
-                            val feels = findViewById<TextView>(R.id.feels_like)
-                            val wind = findViewById<TextView>(R.id.wind_info)
-                            val pressure = findViewById<TextView>(R.id.pressure)
-                            val humidity = findViewById<TextView>(R.id.humidity)
+                            val feels = findViewById<Chip>(R.id.feeling_chip)
+                            val wind = findViewById<Chip>(R.id.wind_chip)
+                            val pressure = findViewById<Chip>(R.id.press_chip)
+                            val humidity = findViewById<Chip>(R.id.humidity_chip)
                             val weatherIcon = findViewById<ImageView>(R.id.weather_icon)
 
                             runOnUiThread {
                                 currentTemperature.text = getTemperature(weatherObject.main.temp)
-                                description.text = weatherObject.weather[0].description.toString()
-                                feels.text = "Ощущается как " + getTemperature(weatherObject.main.feels_like)
+                                feels.text = getTemperature(weatherObject.main.feels_like)
                                 wind.text = getWindInfo(weatherObject.wind.speed, weatherObject.wind.deg)
                                 pressure.text = getPressure(weatherObject.main.pressure)
-                                humidity.text = "Влажность: " + weatherObject.main.humidity.toString().toFloat().roundToInt() + "%"
+                                humidity.text = "" + weatherObject.main.humidity.toString().toFloat().roundToInt() + "%"
                                 val uri: Uri = Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + weatherObject.weather[0].icon )
                                 weatherIcon.setImageURI(null)
                                 weatherIcon.setImageURI(uri)
 
                                 setVisibleContent()
+
+                                wind.setOnClickListener {
+                                    Toast.makeText(this@MainActivity, "Скорость и направление ветра", Toast.LENGTH_SHORT).show()
+                                }
+                                pressure.setOnClickListener {
+                                    Toast.makeText(this@MainActivity, "Атмосферное давление", Toast.LENGTH_SHORT).show()
+                                }
+                                humidity.setOnClickListener {
+                                    Toast.makeText(this@MainActivity, "Влажность", Toast.LENGTH_SHORT).show()
+                                }
+                                feels.setOnClickListener {
+                                    Toast.makeText(this@MainActivity, "Температура \"по ощущениям\"", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         } else {
                             runOnUiThread {
                                 setErrorCode(1, weatherObject.cod)
+                            }
+                        }
+                    }
+                }
+            }
+        )
+
+        forecast.run(
+            forecastUrl,
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    setErrorCode(0)
+                }
+
+                @Throws(IOException::class)
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.body != null) {
+                        val stringResponse = response.body!!.string()
+                        val builder = GsonBuilder()
+                        val gson: Gson = builder.create()
+
+                        val forecastObject: ForecastResponse = gson.fromJson(stringResponse, ForecastResponse::class.java)
+
+                        if (forecastObject.cod == "200") {
+                            runOnUiThread {
+                                val listView = findViewById<ListView>(R.id.forecast_list)
+                                val listOfWeathers = forecastObject.list
+                                val forecastList = listOf(
+                                    arrayOf(listOfWeathers[2], listOfWeathers[4], listOfWeathers[6], listOfWeathers[8]),
+                                    arrayOf(listOfWeathers[10], listOfWeathers[12], listOfWeathers[14], listOfWeathers[16]),
+                                    arrayOf(listOfWeathers[18], listOfWeathers[20], listOfWeathers[22], listOfWeathers[24]),
+                                    arrayOf(listOfWeathers[26], listOfWeathers[28], listOfWeathers[30], listOfWeathers[32]),
+                                    arrayOf(listOfWeathers[34], listOfWeathers[36], listOfWeathers[38], listOfWeathers[39])
+                                )
+
+                                val forecastAdapter = ForecastAdapter(
+                                    this@MainActivity,
+                                    R.layout.forecast_item,
+                                    forecastList
+                                )
+                                listView.adapter = forecastAdapter
+
+                            }
+                        } else {
+                            runOnUiThread {
+                                setErrorCode(1, forecastObject.cod.toInt())
                             }
                         }
                     }
@@ -129,17 +193,17 @@ class MainActivity : AppCompatActivity() {
     private fun getTemperature(temp: Any) : String {
         val intTemp = temp.toString().toFloat().roundToInt()
         return if (intTemp > 0)
-            "+$intTemp°C"
+            "+$intTemp°"
         else
-            "$intTemp°C"
+            "$intTemp°"
     }
 
     private fun getPressure(pressure: Any) : String {
-        return "Давление: " + (pressure.toString().toFloat() * 0.750064).roundToInt().toString() + " мм. рт. ст."
+        return "" + (pressure.toString().toFloat() * 0.750064).roundToInt().toString() + " мм.рт.ст"
     }
 
     private fun getWindInfo(speed: Any, degrees: Any) : String {
-        val result = "Ветер: " + speed.toString().toFloat().roundToInt() + " м/с, "
+        val result = "" + speed.toString().toFloat().roundToInt() + " м/с, "
 
         val deg = degrees.toString().toFloat().roundToInt()
         var direction = ""
