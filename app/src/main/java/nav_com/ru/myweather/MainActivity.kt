@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.chip.Chip
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import nav_com.ru.myweather.models.ForecastItem
 import nav_com.ru.myweather.models.ForecastResponse
 import nav_com.ru.myweather.models.WeatherResponse
 import okhttp3.Call
@@ -163,7 +164,32 @@ class MainActivity : AppCompatActivity() {
                             runOnUiThread {
                                 val listView = findViewById<ListView>(R.id.forecast_list)
                                 val listOfWeathers = forecastObject.list
-                                val forecastList = listOf(
+                                val firstItem = checkDayForecast(listOfWeathers)
+                                val lastItem = forecastObject.cnt - 1
+                                val forecastList = mutableListOf<Array<ForecastItem>>()
+                                var index = 0
+                                for (i in firstItem until listOfWeathers.size) {
+                                    var tempArray : Array<ForecastItem> = emptyArray()
+                                    for (j in 0..3){
+                                        val currentIndex = index * 7 + i + j * 2
+                                        tempArray += if (currentIndex <= lastItem)
+                                            listOfWeathers[currentIndex]
+                                        else if (currentIndex - 1 <= lastItem)
+                                            listOfWeathers[currentIndex - 1]
+                                        else
+                                            break
+                                    }
+                                    index++
+                                    if (tempArray.isNotEmpty()) {
+                                        Log.e("Date", "утро - " + tempArray[0].dt_txt)
+                                        forecastList += tempArray
+                                    }else
+                                        break
+                                }
+
+                                Log.e("tag2", forecastList.toString())
+
+                                val forecastList2 = listOf(
                                     arrayOf(listOfWeathers[2], listOfWeathers[4], listOfWeathers[6], listOfWeathers[8]),
                                     arrayOf(listOfWeathers[10], listOfWeathers[12], listOfWeathers[14], listOfWeathers[16]),
                                     arrayOf(listOfWeathers[18], listOfWeathers[20], listOfWeathers[22], listOfWeathers[24]),
@@ -272,4 +298,21 @@ class MainActivity : AppCompatActivity() {
     private fun savePosition (theme: Int) = sharedPrefs.edit().putInt(KEY_POSITION, theme).apply()
 
     private fun getSavedPosition() = sharedPrefs.getInt(KEY_POSITION, 10)
+
+    private fun checkDayForecast(list : List<ForecastItem>) : Int {
+        var counter = 0
+        for (item in list) {
+            if (isNewDayForecast(item.dt_txt)){
+                return counter
+            } else {
+                counter++
+            }
+        }
+        return counter
+    }
+
+    private fun isNewDayForecast(date: String) : Boolean {
+        val time = date.split(" ")[1].split(":")[0].toInt()
+        return time == 6
+    }
 }
