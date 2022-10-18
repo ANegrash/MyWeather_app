@@ -10,8 +10,8 @@ android {
         applicationId "nav_com.ru.myweather"
         minSdk 21
         targetSdk 33
-        versionCode 3
-        versionName "1.1(1)"
+        versionCode 4
+        versionName "1.1(2) special for Kilina Julia"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,4 +42,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }

@@ -1,14 +1,15 @@
 package nav_com.ru.myweather
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.chip.Chip
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -23,10 +24,14 @@ import kotlin.math.roundToInt
 
 const val PREFS_NAME = "myWeather_prefs"
 const val KEY_POSITION = "prefs.position"
+const val KEY_TEMPERATURE = "prefs.temp"
+const val KEY_WIND_POWER = "prefs.wind_power"
+const val KEY_WIND_DIRECTION = "prefs.wind_direction"
+const val KEY_PRESSURE = "prefs.pressure"
 class MainActivity : AppCompatActivity() {
 
-    private val listOfCities = arrayOf("Адлер", "Алушта", "Джанкой", "Евпатория", "Елец", "Керчь", "Москва", "Нижневартовск", "Саки", "Санкт-Петербург", "Севастополь",  "Симферополь", "Сочи", "Феодосия", "Ялта")
-    private val listOfCityIds = arrayOf("584243", "713513", "709334", "688105", "467978", "706524", "524894", "1497543", "2323390", "498817", "694423",  "693805", "491422", "709161", "688532")
+    private val listOfCities = arrayOf("Адлер", "Алушта", "Джанкой", "Евпатория", "Елец", "Керчь", "Москва", "Нижневартовск", "Саки", "Санкт-Петербург", "Севастополь",  "Симферополь", "Сочи", "Феодосия", "Чайковский \uD83C\uDD95", "Ялта")
+    private val listOfCityIds = arrayOf("584243", "713513", "709334", "688105", "467978", "706524", "524894", "1497543", "2323390", "498817", "694423",  "693805", "491422", "709161", "569742", "688532")
     private var position : Int = 10
 
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
@@ -40,10 +45,16 @@ class MainActivity : AppCompatActivity() {
 
         val citySelector = findViewById<Button>(R.id.citySelection)
         citySelector.text = listOfCities[position]
-        val reloadBtn = findViewById<Button>(R.id.reload)
+        val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+        val settings = findViewById<Button>(R.id.settings)
 
-        reloadBtn.setOnClickListener {
+        swipeRefresh.setOnRefreshListener {
             setContent(position)
+        }
+
+        settings.setOnClickListener {
+            intent = Intent(this, Settings::class.java)
+            startActivity(intent)
         }
 
         val reloadErrBtn = findViewById<Button>(R.id.reload_in_error)
@@ -67,6 +78,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        setContent(getSavedPosition())
+        super.onResume()
+    }
+
     private fun setContent(
         position: Int = 10
     ){
@@ -74,11 +90,24 @@ class MainActivity : AppCompatActivity() {
         citySelector.text = listOfCities[position]
         setVisibleContent(0, 1, 0)
 
+        val units = if (getSavedTemperature() == 0)
+            "metric"
+        else
+            "imperial"
+
         val requestUrl =
-            "https://api.openweathermap.org/data/2.5/weather?id=" + listOfCityIds[position] + "&appid=ddd069d11b1e504d8268d4ee774ddd64&lang=ru&units=metric"
+            "https://api.openweathermap.org/data/2.5/weather?" +
+                    "id=" + listOfCityIds[position] +
+                    "&appid=ddd069d11b1e504d8268d4ee774ddd64" +
+                    "&lang=ru" +
+                    "&units=" + units
 
         val forecastUrl =
-            "https://api.openweathermap.org/data/2.5/forecast?id=" + listOfCityIds[position] + "&appid=ddd069d11b1e504d8268d4ee774ddd64&lang=ru&units=metric"
+            "https://api.openweathermap.org/data/2.5/forecast?" +
+                    "id=" + listOfCityIds[position] +
+                    "&appid=ddd069d11b1e504d8268d4ee774ddd64" +
+                    "&lang=ru" +
+                    "&units=" + units
 
         val request = Request()
         val forecast = Request()
@@ -181,21 +210,10 @@ class MainActivity : AppCompatActivity() {
                                     }
                                     index++
                                     if (tempArray.isNotEmpty()) {
-                                        Log.e("Date", "утро - " + tempArray[0].dt_txt)
                                         forecastList += tempArray
                                     }else
                                         break
                                 }
-
-                                Log.e("tag2", forecastList.toString())
-
-                                val forecastList2 = listOf(
-                                    arrayOf(listOfWeathers[2], listOfWeathers[4], listOfWeathers[6], listOfWeathers[8]),
-                                    arrayOf(listOfWeathers[10], listOfWeathers[12], listOfWeathers[14], listOfWeathers[16]),
-                                    arrayOf(listOfWeathers[18], listOfWeathers[20], listOfWeathers[22], listOfWeathers[24]),
-                                    arrayOf(listOfWeathers[26], listOfWeathers[28], listOfWeathers[30], listOfWeathers[32]),
-                                    arrayOf(listOfWeathers[34], listOfWeathers[36], listOfWeathers[38], listOfWeathers[39])
-                                )
 
                                 val forecastAdapter = ForecastAdapter(
                                     this@MainActivity,
@@ -218,34 +236,54 @@ class MainActivity : AppCompatActivity() {
 
     private fun getTemperature(temp: Any) : String {
         val intTemp = temp.toString().toFloat().roundToInt()
+        val ending = if (getSavedTemperature() == 0) "C" else "F"
         return if (intTemp > 0)
-            "+$intTemp°"
+            "+$intTemp°$ending"
         else
-            "$intTemp°"
+            "$intTemp°$ending"
     }
 
     private fun getPressure(pressure: Any) : String {
-        return "" + (pressure.toString().toFloat() * 0.750064).roundToInt().toString() + " мм.рт.ст"
+        return if (getSavedPressure() == 0)
+            "" + (pressure.toString().toFloat() * 0.750064).roundToInt().toString() + " мм.рт.ст"
+        else
+            "" + pressure.toString().toFloat().roundToInt() + " гПа"
     }
 
     private fun getWindInfo(speed: Any, degrees: Any) : String {
-        val result = "" + speed.toString().toFloat().roundToInt() + " м/с, "
-
-        val deg = degrees.toString().toFloat().roundToInt()
-        var direction = ""
-        when (deg) {
-            in 0..23 -> direction = "С"
-            in 24..66 -> direction = "СВ"
-            in 67..113 -> direction = "В"
-            in 114..158 -> direction = "ЮВ"
-            in 159..203 -> direction = "Ю"
-            in 204..248 -> direction = "ЮЗ"
-            in 249..293 -> direction = "З"
-            in 294..338 -> direction = "СЗ"
-            in 339..360 -> direction = "С"
+        val resultSystem = getSavedTemperature()
+        var power = ""
+        if (resultSystem == 0){
+            if (getSavedWindPower() == 0)
+                power += "" + speed.toString().toFloat().roundToInt() + " м/с, "
+            else
+                power += "" + String.format("%.1f", speed.toString().toFloat().roundToInt() * 2.236936) + " миль/ч, "
+        } else {
+            if (getSavedWindPower() == 0)
+                power += "" + (speed.toString().toFloat().roundToInt() * 0.44704).roundToInt() + " м/с, "
+            else
+                power += "" + String.format("%.1f", speed.toString().toFloat()) + " миль/ч, "
         }
 
-        return result + direction
+        val deg = degrees.toString().toFloat().roundToInt()
+
+        var direction = ""
+        if (getSavedWindDirection() == 0){
+            when (deg) {
+                in 0..23 -> direction = "С"
+                in 24..66 -> direction = "СВ"
+                in 67..113 -> direction = "В"
+                in 114..158 -> direction = "ЮВ"
+                in 159..203 -> direction = "Ю"
+                in 204..248 -> direction = "ЮЗ"
+                in 249..293 -> direction = "З"
+                in 294..338 -> direction = "СЗ"
+                in 339..360 -> direction = "С"
+            }
+        } else
+            direction = "$deg°"
+
+        return power + direction
     }
 
     private fun setVisibleContent (
@@ -257,6 +295,7 @@ class MainActivity : AppCompatActivity() {
         val loadingContent = findViewById<ConstraintLayout>(R.id.loadingContent)
         val citySelector = findViewById<Button>(R.id.citySelection)
         val errorContent = findViewById<ConstraintLayout>(R.id.errorContent)
+        val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
 
         when (main) {
             0 -> mainContent.visibility = View.GONE
@@ -267,6 +306,7 @@ class MainActivity : AppCompatActivity() {
             0 -> {
                 loadingContent.visibility = View.GONE
                 citySelector.isEnabled = true
+                swipeRefresh.isRefreshing = false
             }
             1 -> {
                 loadingContent.visibility = View.VISIBLE
@@ -298,6 +338,14 @@ class MainActivity : AppCompatActivity() {
     private fun savePosition (theme: Int) = sharedPrefs.edit().putInt(KEY_POSITION, theme).apply()
 
     private fun getSavedPosition() = sharedPrefs.getInt(KEY_POSITION, 10)
+
+    private fun getSavedTemperature() = sharedPrefs.getInt(KEY_TEMPERATURE, 0)
+
+    private fun getSavedWindPower() = sharedPrefs.getInt(KEY_WIND_POWER, 0)
+
+    private fun getSavedWindDirection() = sharedPrefs.getInt(KEY_WIND_DIRECTION, 0)
+
+    private fun getSavedPressure() = sharedPrefs.getInt(KEY_PRESSURE, 0)
 
     private fun checkDayForecast(list : List<ForecastItem>) : Int {
         var counter = 0
