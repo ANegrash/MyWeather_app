@@ -1,10 +1,14 @@
 package nav_com.ru.myweather
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.widget.SwitchCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 
 class Settings : AppCompatActivity() {
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
@@ -22,6 +26,9 @@ class Settings : AppCompatActivity() {
         val switchWind = findViewById<SwitchCompat>(R.id.switchWind)
         val switchWindDirection = findViewById<SwitchCompat>(R.id.switchWindDir)
         val switchPress = findViewById<SwitchCompat>(R.id.switchPress)
+
+        val rate = findViewById<ConstraintLayout>(R.id.rate_layout)
+        val privacy = findViewById<ConstraintLayout>(R.id.priacy)
 
         switchTemperature.isChecked = getSavedTemperature() != 0
         switchWind.isChecked = getSavedWindPower() != 0
@@ -42,6 +49,30 @@ class Settings : AppCompatActivity() {
 
         switchPress.setOnCheckedChangeListener { _, isChecked ->
             savePressure(if (isChecked) 1 else 0)
+        }
+
+        rate.setOnClickListener {
+            val uri: Uri = Uri.parse("market://details?id=$packageName")
+            val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+            goToMarket.addFlags(
+                Intent.FLAG_ACTIVITY_NO_HISTORY or
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+            try {
+                startActivity(goToMarket)
+            } catch (e: ActivityNotFoundException) {
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=$packageName"))
+                )
+            }
+        }
+
+        privacy.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW);
+            intent.data = Uri.parse("https://nav-com.ru/weather")
+            startActivity(intent)
         }
     }
 
