@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import androidx.appcompat.widget.SwitchCompat
 
 class Settings : AppCompatActivity() {
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
@@ -17,93 +18,30 @@ class Settings : AppCompatActivity() {
             finish()
         }
 
-        val temperatureC = findViewById<Button>(R.id.temperature_c)
-        val temperatureF = findViewById<Button>(R.id.temperature_f)
-        val windMS = findViewById<Button>(R.id.wind_meters)
-        val windMH = findViewById<Button>(R.id.wind_miles)
-        val windStoroni = findViewById<Button>(R.id.wind_geo)
-        val windDegrees = findViewById<Button>(R.id.wind_deg)
-        val pressMRS = findViewById<Button>(R.id.press_mm)
-        val pressHPA = findViewById<Button>(R.id.press_hpa)
+        val switchTemperature = findViewById<SwitchCompat>(R.id.switchTemperature)
+        val switchWind = findViewById<SwitchCompat>(R.id.switchWind)
+        val switchWindDirection = findViewById<SwitchCompat>(R.id.switchWindDir)
+        val switchPress = findViewById<SwitchCompat>(R.id.switchPress)
 
-        if (getSavedTemperature() == 0){
-            temperatureC.setBackgroundColor(resources.getColor(R.color.light_green))
-            temperatureF.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-        } else {
-            temperatureC.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-            temperatureF.setBackgroundColor(resources.getColor(R.color.light_green))
+        switchTemperature.isChecked = getSavedTemperature() != 0
+        switchWind.isChecked = getSavedWindPower() != 0
+        switchWindDirection.isChecked = getSavedWindDirection() != 0
+        switchPress.isChecked = getSavedPressure() != 0
+
+        switchTemperature.setOnCheckedChangeListener { _, isChecked ->
+            saveTemperature(if (isChecked) 1 else 0)
         }
 
-        if (getSavedWindPower() == 0){
-            windMS.setBackgroundColor(resources.getColor(R.color.light_green))
-            windMH.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-        } else {
-            windMS.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-            windMH.setBackgroundColor(resources.getColor(R.color.light_green))
+        switchWind.setOnCheckedChangeListener { _, isChecked ->
+            saveWindPower(if (isChecked) 1 else 0)
         }
 
-        if (getSavedWindDirection() == 0){
-            windStoroni.setBackgroundColor(resources.getColor(R.color.light_green))
-            windDegrees.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-        } else {
-            windStoroni.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-            windDegrees.setBackgroundColor(resources.getColor(R.color.light_green))
+        switchWindDirection.setOnCheckedChangeListener { _, isChecked ->
+            saveWindDirection(if (isChecked) 1 else 0)
         }
 
-        if (getSavedPressure() == 0){
-            pressMRS.setBackgroundColor(resources.getColor(R.color.light_green))
-            pressHPA.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-        } else {
-            pressMRS.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-            pressHPA.setBackgroundColor(resources.getColor(R.color.light_green))
-        }
-
-        temperatureC.setOnClickListener {
-            saveTemperature(0)
-            temperatureC.setBackgroundColor(resources.getColor(R.color.light_green))
-            temperatureF.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-        }
-
-        temperatureF.setOnClickListener {
-            saveTemperature(1)
-            temperatureC.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-            temperatureF.setBackgroundColor(resources.getColor(R.color.light_green))
-        }
-
-        windMS.setOnClickListener {
-            saveWindPower(0)
-            windMS.setBackgroundColor(resources.getColor(R.color.light_green))
-            windMH.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-        }
-
-        windMH.setOnClickListener {
-            saveWindPower(1)
-            windMS.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-            windMH.setBackgroundColor(resources.getColor(R.color.light_green))
-        }
-
-        windStoroni.setOnClickListener {
-            saveWindDirection(0)
-            windStoroni.setBackgroundColor(resources.getColor(R.color.light_green))
-            windDegrees.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-        }
-
-        windDegrees.setOnClickListener {
-            saveWindDirection(1)
-            windStoroni.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-            windDegrees.setBackgroundColor(resources.getColor(R.color.light_green))
-        }
-
-        pressMRS.setOnClickListener {
-            savePressure(0)
-            pressMRS.setBackgroundColor(resources.getColor(R.color.light_green))
-            pressHPA.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-        }
-
-        pressHPA.setOnClickListener {
-            savePressure(1)
-            pressMRS.setBackgroundColor(resources.getColor(R.color.ic_launcher_background))
-            pressHPA.setBackgroundColor(resources.getColor(R.color.light_green))
+        switchPress.setOnCheckedChangeListener { _, isChecked ->
+            savePressure(if (isChecked) 1 else 0)
         }
     }
 

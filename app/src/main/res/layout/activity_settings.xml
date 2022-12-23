@@ -85,38 +85,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/temperature_c"
-            android:layout_width="95dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="@color/light_green"
-            android:fontFamily="@font/centurygothic"
-            android:text="°C"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/temperature_f"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-        <Button
-            android:id="@+id/temperature_f"
-            android:layout_width="95dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/ic_launcher_background"
-            android:fontFamily="@font/centurygothic"
-            android:text="°F"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/temperature_c"
-            app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
         <TextView
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
@@ -128,41 +96,21 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/temperature_c" />
+            app:layout_constraintTop_toBottomOf="@+id/switchTemperature" />
 
-        <Button
-            android:id="@+id/wind_meters"
-            android:layout_width="95dp"
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="@color/light_green"
+            android:layout_marginEnd="16dp"
             android:fontFamily="@font/centurygothic"
             android:text="м/с"
-            android:textAllCaps="false"
-            android:textSize="14sp"
+            android:textColor="@color/dark"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/wind_miles"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView9" />
-
-        <Button
-            android:id="@+id/wind_miles"
-            android:layout_width="95dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/ic_launcher_background"
-            android:fontFamily="@font/centurygothic"
-            android:text="мили/ч"
-            android:textAllCaps="false"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/wind_meters"
-            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+            app:layout_constraintBottom_toBottomOf="@+id/switchWind"
+            app:layout_constraintEnd_toStartOf="@+id/switchWind"
+            app:layout_constraintTop_toTopOf="@+id/switchWind" />
 
         <TextView
             android:id="@+id/textView10"
@@ -175,41 +123,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wind_meters" />
-
-        <Button
-            android:id="@+id/wind_geo"
-            android:layout_width="95dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="@color/light_green"
-            android:fontFamily="@font/centurygothic"
-            android:text="стороны"
-            android:textAllCaps="false"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/wind_deg"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView10" />
-
-        <Button
-            android:id="@+id/wind_deg"
-            android:layout_width="95dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/ic_launcher_background"
-            android:fontFamily="@font/centurygothic"
-            android:text="градусы"
-            android:textAllCaps="false"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/wind_geo"
-            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+            app:layout_constraintTop_toBottomOf="@+id/switchWind" />
 
         <TextView
             android:id="@+id/textView11"
@@ -222,41 +136,150 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wind_geo" />
+            app:layout_constraintTop_toBottomOf="@+id/switchWindDir" />
 
-        <Button
-            android:id="@+id/press_mm"
-            android:layout_width="95dp"
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchTemperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:showText="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/centurygothic"
+            android:text="°C"
+            android:textColor="@color/dark"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/switchTemperature"
+            app:layout_constraintEnd_toStartOf="@+id/switchTemperature"
+            app:layout_constraintTop_toTopOf="@+id/switchTemperature" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="@color/light_green"
             android:fontFamily="@font/centurygothic"
-            android:text="мм.рт.ст"
-            android:textAllCaps="false"
-            android:textSize="12sp"
+            android:text="°F"
+            android:textColor="@color/dark"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/press_hpa"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toBottomOf="@+id/switchTemperature"
+            app:layout_constraintStart_toEndOf="@+id/switchTemperature"
+            app:layout_constraintTop_toTopOf="@+id/switchTemperature" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchWind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/centurygothic"
+            android:text="мили/ч"
+            android:textColor="@color/dark"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/switchWind"
+            app:layout_constraintStart_toEndOf="@+id/switchWind"
+            app:layout_constraintTop_toTopOf="@+id/switchWind" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchWindDir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/centurygothic"
+            android:text="стороны"
+            android:textColor="@color/dark"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/switchWindDir"
+            app:layout_constraintEnd_toStartOf="@+id/switchWindDir"
+            app:layout_constraintTop_toTopOf="@+id/switchWindDir" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/centurygothic"
+            android:text="градусы"
+            android:textColor="@color/dark"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/switchWindDir"
+            app:layout_constraintStart_toEndOf="@+id/switchWindDir"
+            app:layout_constraintTop_toTopOf="@+id/switchWindDir" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchPress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
-        <Button
-            android:id="@+id/press_hpa"
-            android:layout_width="95dp"
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/ic_launcher_background"
+            android:fontFamily="@font/centurygothic"
+            android:text="мм.рт.ст."
+            android:textColor="@color/dark"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/switchPress"
+            app:layout_constraintEnd_toStartOf="@+id/switchPress"
+            app:layout_constraintTop_toTopOf="@+id/switchPress" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:fontFamily="@font/centurygothic"
             android:text="гПа"
-            android:textAllCaps="false"
-            android:textSize="12sp"
+            android:textColor="@color/dark"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/press_mm"
-            app:layout_constraintTop_toBottomOf="@+id/textView11" />
+            app:layout_constraintBottom_toBottomOf="@+id/switchPress"
+            app:layout_constraintStart_toEndOf="@+id/switchPress"
+            app:layout_constraintTop_toTopOf="@+id/switchPress" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
