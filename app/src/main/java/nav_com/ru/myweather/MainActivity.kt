@@ -4,10 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -46,10 +44,13 @@ class MainActivity : AppCompatActivity() {
         setVisibleContent()
 
         position = getSavedPosition()
-        Log.e("TAG", ">$position<")
-        if (position != -1){
+        if (position > -1){
             saveCurrentCity(listOfCities[position])
             saveFavorites("{\"" + listOfCities[position] + "\":\"" + listOfCitylls[position] + "\"}")
+            savePosition(-1)
+        } else if (position == -2){
+            saveCurrentCity(listOfCities[10])
+            saveFavorites("{\"" + listOfCities[10] + "\":\"" + listOfCitylls[10] + "\"}")
             savePosition(-1)
         }
 
@@ -354,7 +355,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun savePosition (theme: Int) = sharedPrefs.edit().putInt(KEY_POSITION, theme).apply()
 
-    private fun getSavedPosition() = sharedPrefs.getInt(KEY_POSITION, -1)
+    private fun getSavedPosition() = sharedPrefs.getInt(KEY_POSITION, -2)
 
     private fun getSavedTemperature() = sharedPrefs.getInt(KEY_TEMPERATURE, 0)
 

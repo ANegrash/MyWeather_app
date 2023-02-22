@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import nav_com.ru.myweather.models.SearchCity
 
 class FavoriteListAdapter (
     context: Context?,

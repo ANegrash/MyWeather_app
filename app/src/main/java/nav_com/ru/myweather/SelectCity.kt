@@ -8,14 +8,10 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ImageButton
 import android.widget.ListView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import nav_com.ru.myweather.models.SearchCity
 
 class SelectCity : AppCompatActivity() {
 
