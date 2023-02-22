@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -13,6 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.chip.Chip
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import nav_com.ru.myweather.models.ForecastItem
 import nav_com.ru.myweather.models.ForecastResponse
 import nav_com.ru.myweather.models.WeatherResponse
@@ -28,11 +30,13 @@ const val KEY_TEMPERATURE = "prefs.temp"
 const val KEY_WIND_POWER = "prefs.wind_power"
 const val KEY_WIND_DIRECTION = "prefs.wind_direction"
 const val KEY_PRESSURE = "prefs.pressure"
+const val KEY_FAVORITE_LIST = "prefs.favorite_list"
+const val KEY_CURRENT_CITY = "prefs.current_city"
 class MainActivity : AppCompatActivity() {
 
     private val listOfCities = arrayOf("Адлер", "Алушта", "Джанкой", "Евпатория", "Елец", "Керчь", "Москва", "Нижневартовск", "Саки", "Санкт-Петербург", "Севастополь",  "Симферополь", "Сочи", "Феодосия", "Чайковский", "Ялта")
-    private val listOfCityIds = arrayOf("584243", "713513", "709334", "688105", "467978", "706524", "524894", "1497543", "2323390", "498817", "694423",  "693805", "491422", "709161", "569742", "688532")
-    private var position : Int = 10
+    private val listOfCitylls = arrayOf("43.4253834, 39.9237036", "44.677112, 34.4095393", "45.7093755, 34.3899131", "45.1907635, 33.3679049", "52.6219865, 38.5003298", "45.3534002, 36.4538645", "55.750446, 37.617493", "60.9339411, 76.5814274", "45.1319466, 33.6001281", "59.938732, 30.316229", "44.6054434, 33.5220842",  "44.9521459, 34.1024858", "43.5854823, 39.723109", "45.033669, 35.3753628", "56.7787468, 54.1500704", "44.49707, 34.158688")
+    private var position : Int = 0
 
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
 
@@ -42,14 +46,19 @@ class MainActivity : AppCompatActivity() {
         setVisibleContent()
 
         position = getSavedPosition()
+        Log.e("TAG", ">$position<")
+        if (position != -1){
+            saveCurrentCity(listOfCities[position])
+            saveFavorites("{\"" + listOfCities[position] + "\":\"" + listOfCitylls[position] + "\"}")
+            savePosition(-1)
+        }
 
         val citySelector = findViewById<Button>(R.id.citySelection)
-        citySelector.text = listOfCities[position]
         val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
         val settings = findViewById<Button>(R.id.settings)
 
         swipeRefresh.setOnRefreshListener {
-            setContent(position)
+            setContent()
         }
 
         settings.setOnClickListener {
@@ -60,35 +69,30 @@ class MainActivity : AppCompatActivity() {
         val reloadErrBtn = findViewById<Button>(R.id.reload_in_error)
 
         reloadErrBtn.setOnClickListener {
-            setContent(position)
+            setContent()
         }
 
         citySelector.setOnClickListener {
-            val citiesAdapter =
-                ArrayAdapter(this, android.R.layout.simple_list_item_1, listOfCities)
-            AlertDialog.Builder(this)
-                .setTitle("Выберите город")
-                .setAdapter(citiesAdapter) { _, pos: Int ->
-                    position = pos
-                    setContent(position)
-                }
-                .show()
+            intent = Intent(this, SelectCity::class.java)
+            startActivity(intent)
         }
-        setContent(position)
+        setContent()
 
     }
 
     override fun onResume() {
-        setContent(getSavedPosition())
+        setContent()
         super.onResume()
     }
 
-    private fun setContent(
-        position: Int = 10
-    ){
+    private fun setContent(){
+        val currentCity = getCurrentCity().toString()
         val citySelector = findViewById<Button>(R.id.citySelection)
-        citySelector.text = listOfCities[position]
+        citySelector.text = currentCity
         setVisibleContent(0, 1, 0)
+
+        val ll = getCurrentLL(currentCity)
+
 
         val units = if (getSavedTemperature() == 0)
             "metric"
@@ -96,23 +100,19 @@ class MainActivity : AppCompatActivity() {
             "imperial"
 
         val requestUrl =
-            "https://api.openweathermap.org/data/2.5/weather?" +
-                    "id=" + listOfCityIds[position] +
+            "https://api.openweathermap.org/data/2.5/weather?$ll" +
                     "&appid=ddd069d11b1e504d8268d4ee774ddd64" +
                     "&lang=ru" +
                     "&units=" + units
 
         val forecastUrl =
-            "https://api.openweathermap.org/data/2.5/forecast?" +
-                    "id=" + listOfCityIds[position] +
+            "https://api.openweathermap.org/data/2.5/forecast?$ll" +
                     "&appid=ddd069d11b1e504d8268d4ee774ddd64" +
                     "&lang=ru" +
                     "&units=" + units
 
         val request = Request()
         val forecast = Request()
-
-        savePosition(position)
 
         request.run(
             requestUrl,
@@ -329,15 +329,32 @@ class MainActivity : AppCompatActivity() {
             errorText.text = when (errCode) {
                 0 -> "Нет соединения с сервером"
                 1 -> "Ошибка сервера. Код: $cod"
+                2 -> "Не выбран город для прогноза"
                 else -> "Неизвестная ошибка. Попробуйте позже"
             }
             setVisibleContent(0, 0, 1)
         }
     }
 
+
+    private fun getCurrentLL(city: String) : String{
+        val builder = GsonBuilder()
+        val gson: Gson = builder.create()
+        val favoritesMap: MutableMap<String, String> = gson.fromJson(getSavedFavorites(), object : TypeToken<MutableMap<String, String>>() {}.type)
+        return "lat=" + favoritesMap[city].toString().split(", ")[0] + "&lon=" + favoritesMap[city].toString().split(", ")[1]
+    }
+
+    private fun saveFavorites(fav: String) = sharedPrefs.edit().putString(KEY_FAVORITE_LIST, fav).apply()
+
+    private fun getSavedFavorites() = sharedPrefs.getString(KEY_FAVORITE_LIST, "{}")
+
+    private fun saveCurrentCity (city: String) = sharedPrefs.edit().putString(KEY_CURRENT_CITY, city).apply()
+
+    private fun getCurrentCity() = sharedPrefs.getString(KEY_CURRENT_CITY, "")
+
     private fun savePosition (theme: Int) = sharedPrefs.edit().putInt(KEY_POSITION, theme).apply()
 
-    private fun getSavedPosition() = sharedPrefs.getInt(KEY_POSITION, 10)
+    private fun getSavedPosition() = sharedPrefs.getInt(KEY_POSITION, -1)
 
     private fun getSavedTemperature() = sharedPrefs.getInt(KEY_TEMPERATURE, 0)
 

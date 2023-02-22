@@ -12,6 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyWeather">
         <activity
+            android:name=".SearchCityActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SelectCity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".Settings"
             android:exported="false">
             <meta-data
