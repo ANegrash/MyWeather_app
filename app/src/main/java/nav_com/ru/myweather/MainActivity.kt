@@ -47,10 +47,6 @@ class MainActivity : AppCompatActivity() {
             saveCurrentCity(listOfCities[position])
             saveFavorites("{\"" + listOfCities[position] + "\":\"" + listOfCitylls[position] + "\"}")
             savePosition(-1)
-        } else if (position == -2){
-            saveCurrentCity(listOfCities[10])
-            saveFavorites("{\"" + listOfCities[10] + "\":\"" + listOfCitylls[10] + "\"}")
-            savePosition(-1)
         }
 
         setAll()
@@ -267,17 +263,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun getWindInfo(speed: Any, degrees: Any) : String {
         val resultSystem = getSavedTemperature()
-        var power = ""
-        if (resultSystem == 0){
+        val power = if (resultSystem == 0){
             if (getSavedWindPower() == 0)
-                power += "" + speed.toString().toFloat().roundToInt() + " м/с, "
+                "" + speed.toString().toFloat().roundToInt() + " м/с, "
             else
-                power += "" + String.format("%.1f", speed.toString().toFloat().roundToInt() * 2.236936) + " миль/ч, "
+                "" + String.format("%.1f", speed.toString().toFloat().roundToInt() * 2.236936) + " миль/ч, "
         } else {
             if (getSavedWindPower() == 0)
-                power += "" + (speed.toString().toFloat().roundToInt() * 0.44704).roundToInt() + " м/с, "
+                "" + (speed.toString().toFloat().roundToInt() * 0.44704).roundToInt() + " м/с, "
             else
-                power += "" + String.format("%.1f", speed.toString().toFloat()) + " миль/ч, "
+                "" + String.format("%.1f", speed.toString().toFloat()) + " миль/ч, "
         }
 
         val deg = degrees.toString().toFloat().roundToInt()
@@ -308,7 +303,6 @@ class MainActivity : AppCompatActivity() {
     ) {
         val mainContent = findViewById<ConstraintLayout>(R.id.mainContent)
         val loadingContent = findViewById<ConstraintLayout>(R.id.loadingContent)
-        val citySelector = findViewById<Button>(R.id.citySelection)
         val errorContent = findViewById<ConstraintLayout>(R.id.errorContent)
         val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
         val swipeRefreshErr = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutErr)
@@ -322,12 +316,10 @@ class MainActivity : AppCompatActivity() {
         when (loading) {
             0 -> {
                 loadingContent.visibility = View.GONE
-                citySelector.isEnabled = true
                 swipeRefresh.isRefreshing = false
             }
             1 -> {
                 loadingContent.visibility = View.VISIBLE
-                citySelector.isEnabled = false
             }
         }
 
@@ -351,7 +343,6 @@ class MainActivity : AppCompatActivity() {
             setVisibleContent(0, 0, 1)
         }
     }
-
 
     private fun getCurrentLL(city: String) : String{
         val builder = GsonBuilder()

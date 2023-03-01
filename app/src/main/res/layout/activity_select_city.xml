@@ -77,7 +77,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/open_sans"
-                android:text="Давайте добавим новое место"
+                android:text="Давай скорее добавим новое место \nи посмотрим там погоду!"
+                android:textAlignment="center"
                 android:textColor="@color/dark"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/addNewCityCTA"
@@ -92,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/open_sans_bold"
-                android:text="Где вам нужен прогноз?"
+                android:text="Нужен прогноз?"
                 android:textColor="@color/dark"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -112,7 +113,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
-                app:srcCompat="@drawable/monkey" />
+                app:srcCompat="@drawable/hello" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
