@@ -59,8 +59,7 @@
         app:layout_constraintTop_toBottomOf="@+id/backButtonToMain2"
         app:srcCompat="@drawable/ic_search" />
 
-    <ListView
-        android:id="@+id/listOfSearch"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -69,5 +68,79 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/searchEditText">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/error_inSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/errorIcon_inSearch"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintBottom_toTopOf="@+id/mainError_inSearch"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:srcCompat="@drawable/no_internet" />
+
+            <TextView
+                android:id="@+id/mainError_inSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/open_sans_bold"
+                android:text="Ошибка"
+                android:textColor="@color/dark"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/secondaryError_inSearch"
+                app:layout_constraintEnd_toEndOf="@+id/errorIcon_inSearch"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/errorIcon_inSearch"
+                app:layout_constraintTop_toBottomOf="@+id/errorIcon_inSearch" />
+
+            <TextView
+                android:id="@+id/secondaryError_inSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="32dp"
+                android:fontFamily="@font/open_sans"
+                android:text="Повторите поиск позже"
+                android:textColor="@color/dark"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/errorIcon_inSearch"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/errorIcon_inSearch"
+                app:layout_constraintTop_toBottomOf="@+id/mainError_inSearch" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/loading_inSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ProgressBar
+                android:id="@+id/progressBarInSearch"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginBottom="32dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ListView
+            android:id="@+id/listOfSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

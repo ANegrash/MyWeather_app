@@ -99,6 +99,15 @@ class SelectCity : AppCompatActivity() {
                         .setPositiveButton("Да") { _, _ ->
                             favoritesMap.remove(list[position].split("=")[0])
                             saveFavorites(gson.toJson(favoritesMap))
+                            if (getCurrentCity() == list[position].split("=")[0]) {
+                                if (favoritesMap.isNotEmpty()) {
+                                    if (position > 0)
+                                        saveCurrentCity(list[position - 1].split("=")[0])
+                                    else
+                                        saveCurrentCity(list[position + 1].split("=")[0])
+                                } else
+                                    saveCurrentCity("")
+                            }
                             loadContent()
                         }
                         .setCancelable(true)

@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -19,6 +21,7 @@ class SearchCityActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_city)
+        setError(3)
 
         val cityEditText : EditText = findViewById(R.id.searchEditText)
         val doSearchBtn : ImageButton = findViewById(R.id.doSearchBtn)
@@ -34,12 +37,15 @@ class SearchCityActivity : AppCompatActivity() {
             val q : String = cityEditText.text.toString()
             if (q.length >= 2)
                 search(q)
+            else
+                setError(2)
         }
     }
 
     private fun search(
         query: String
     ) {
+        setContent(0, 1,0)
         val requestUrl =
             "https://api.openweathermap.org/geo/1.0/direct?" +
                     "q=$query" +
@@ -53,11 +59,7 @@ class SearchCityActivity : AppCompatActivity() {
             object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     runOnUiThread {
-                        Toast.makeText(
-                            this@SearchCityActivity,
-                            "Произошла непредвиденная ошибка",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        setError(0)
                     }
                 }
 
@@ -73,42 +75,112 @@ class SearchCityActivity : AppCompatActivity() {
                             gson.fromJson(stringResponse, Array<SearchCity>::class.java).toList()
 
                         runOnUiThread {
-                            val scAdapter = SearchCityAdapter(
-                                this@SearchCityActivity,
-                                R.layout.search_city_item,
-                                searchObject
-                            )
-                            listView.adapter = scAdapter
+                            if (searchObject.isEmpty())
+                                setError(1)
+                            else {
+                                val scAdapter = SearchCityAdapter(
+                                    this@SearchCityActivity,
+                                    R.layout.search_city_item,
+                                    searchObject
+                                )
+                                listView.adapter = scAdapter
 
-                            listView.onItemClickListener =
-                                AdapterView.OnItemClickListener { _, _, position, _ ->
-                                    run {
-                                        val obj: SearchCity = searchObject[position]
-                                        val array : Map<String, String> = obj.local_names
+                                listView.onItemClickListener =
+                                    AdapterView.OnItemClickListener { _, _, position, _ ->
+                                        run {
+                                            val obj: SearchCity = searchObject[position]
+                                            val array: Map<String, String> = obj.local_names
 
-                                        val cityName = if (array != null)
-                                            if (array.containsKey("ru")) array["ru"].toString() else obj.name
-                                        else
-                                            obj.name
+                                            val cityName = if (array != null)
+                                                if (array.containsKey("ru")) array["ru"].toString() else obj.name
+                                            else
+                                                obj.name
 
-                                        val latlon = "" + obj.lat + ", " + obj.lon
+                                            val latlon = "" + obj.lat + ", " + obj.lon
 
-                                        val builder = GsonBuilder()
-                                        val gson: Gson = builder.create()
-                                        val favoritesMap: MutableMap<String, String> = gson.fromJson(getSavedFavorites(), object : TypeToken<MutableMap<String, String>>() {}.type)
-                                        favoritesMap[cityName] = latlon
-                                        saveFavorites(gson.toJson(favoritesMap))
-                                        saveCurrentCity(cityName)
+                                            val builder = GsonBuilder()
+                                            val gson: Gson = builder.create()
+                                            val favoritesMap: MutableMap<String, String> =
+                                                gson.fromJson(
+                                                    getSavedFavorites(),
+                                                    object :
+                                                        TypeToken<MutableMap<String, String>>() {}.type
+                                                )
+                                            favoritesMap[cityName] = latlon
+                                            saveFavorites(gson.toJson(favoritesMap))
+                                            saveCurrentCity(cityName)
 
-                                        val intent = Intent(applicationContext, MainActivity::class.java)
-                                        startActivity(intent)
-                                        finish()
+                                            val intent =
+                                                Intent(applicationContext, MainActivity::class.java)
+                                            startActivity(intent)
+                                            finish()
+                                        }
                                     }
-                                }
+
+                                setContent()
+                            }
                         }
                     }
                 }
             })
+    }
+
+    private fun setContent(
+        main: Int = 1,
+        loading: Int = 0,
+        error: Int = 0
+    ){
+        val mainContent = findViewById<ListView>(R.id.listOfSearch)
+        val loadingContent = findViewById<ConstraintLayout>(R.id.loading_inSearch)
+        val errorContent = findViewById<ConstraintLayout>(R.id.error_inSearch)
+
+        when (main) {
+            0 -> mainContent.visibility = View.GONE
+            1 -> mainContent.visibility = View.VISIBLE
+        }
+
+        when (loading) {
+            0 -> loadingContent.visibility = View.GONE
+            1 -> loadingContent.visibility = View.VISIBLE
+        }
+
+        when (error) {
+            0 -> errorContent.visibility = View.GONE
+            1 -> errorContent.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setError(
+        type: Int = 0
+    ){
+        val icon = findViewById<ImageView>(R.id.errorIcon_inSearch)
+        val mainText = findViewById<TextView>(R.id.mainError_inSearch)
+        val secondaryText = findViewById<TextView>(R.id.secondaryError_inSearch)
+
+        when (type){
+            0 -> {
+                icon.setImageResource(R.drawable.no_internet)
+                mainText.text = "Нет соединения с сервером"
+                secondaryText.text = "Проверьте наличие интернета или попробуйте позже"
+            }
+            1 -> {
+                icon.setImageResource(R.drawable.no_results)
+                mainText.text = "Поиск не дал результатов"
+                secondaryText.text = "Проверьте введённые данные на ошибки"
+            }
+            2 -> {
+                icon.setImageResource(R.drawable.no_results)
+                mainText.text = "Введено мало символов"
+                secondaryText.text = "Для поиска введите минимум 2 символа"
+            }
+            3 -> {
+                icon.setImageResource(R.drawable.lets_search)
+                mainText.text = "Добавьте любой город на планете!"
+                secondaryText.text = "1. Введите название в поле выше \n2. Нажмите кнопку поиска \n3. Выберите нужный вариант из списка"
+            }
+        }
+
+        setContent(0, 0, 1)
     }
 
     private fun saveCurrentCity (city: String) = sharedPrefs.edit().putString(KEY_CURRENT_CITY, city).apply()
