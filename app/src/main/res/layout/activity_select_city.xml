@@ -19,7 +19,7 @@
         app:srcCompat="@drawable/ic_arrow_back" />
 
     <TextView
-        android:id="@+id/textView23"
+        android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -55,8 +55,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/noCities"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
+            android:layout_height="match_parent">
 
             <ImageButton
                 android:id="@+id/addNewCityCTA"
@@ -93,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/open_sans_bold"
-                android:text="В избранном пусто"
+                android:text="Где вам нужен прогноз?"
                 android:textColor="@color/dark"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -120,7 +119,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cityList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:visibility="gone">
 
             <ListView
                 android:id="@+id/fav_cities"

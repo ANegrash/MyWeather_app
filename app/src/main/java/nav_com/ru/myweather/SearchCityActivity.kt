@@ -1,11 +1,13 @@
 package nav_com.ru.myweather
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import nav_com.ru.myweather.models.SearchCity
 import okhttp3.Call
 import okhttp3.Callback
@@ -13,6 +15,7 @@ import okhttp3.Response
 import java.io.IOException
 
 class SearchCityActivity : AppCompatActivity() {
+    private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_city)
@@ -90,9 +93,14 @@ class SearchCityActivity : AppCompatActivity() {
 
                                         val latlon = "" + obj.lat + ", " + obj.lon
 
-                                        val intent = Intent(applicationContext, SelectCity::class.java)
-                                        intent.putExtra("name", cityName)
-                                        intent.putExtra("ll", latlon)
+                                        val builder = GsonBuilder()
+                                        val gson: Gson = builder.create()
+                                        val favoritesMap: MutableMap<String, String> = gson.fromJson(getSavedFavorites(), object : TypeToken<MutableMap<String, String>>() {}.type)
+                                        favoritesMap[cityName] = latlon
+                                        saveFavorites(gson.toJson(favoritesMap))
+                                        saveCurrentCity(cityName)
+
+                                        val intent = Intent(applicationContext, MainActivity::class.java)
                                         startActivity(intent)
                                         finish()
                                     }
@@ -102,4 +110,11 @@ class SearchCityActivity : AppCompatActivity() {
                 }
             })
     }
+
+    private fun saveCurrentCity (city: String) = sharedPrefs.edit().putString(KEY_CURRENT_CITY, city).apply()
+
+    private fun saveFavorites(fav: String) = sharedPrefs.edit().putString(KEY_FAVORITE_LIST, fav).apply()
+
+    private fun getSavedFavorites() = sharedPrefs.getString(KEY_FAVORITE_LIST, "{}")
+
 }

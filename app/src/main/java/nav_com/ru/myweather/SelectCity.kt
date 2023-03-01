@@ -1,6 +1,7 @@
 package nav_com.ru.myweather
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,9 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ImageButton
 import android.widget.ListView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -21,20 +25,20 @@ class SelectCity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_city)
 
-        val listView: ListView = findViewById(R.id.fav_cities)
+        loadContent()
+
+    }
+
+    private fun loadContent(){
         val buttonBack: ImageButton = findViewById(R.id.backButtonToMain)
         val buttonAddCity: ImageButton = findViewById(R.id.addNewCity)
         val buttonAddCityCTA: ImageButton = findViewById(R.id.addNewCityCTA)
+        val title: TextView = findViewById(R.id.textViewTitle)
 
-        val builder = GsonBuilder()
-        val gson: Gson = builder.create()
-        val favoritesMap: MutableMap<String, String> = gson.fromJson(getSavedFavorites(), object : TypeToken<MutableMap<String, String>>() {}.type)
-
-        if (intent.hasExtra("name")){
-            val selName = intent.getStringExtra("name").toString()
-            val selLL = intent.getStringExtra("ll").toString()
-            favoritesMap[selName] = selLL
-            saveFavorites(gson.toJson(favoritesMap))
+        if (getSavedFavorites() == "{}") {
+            buttonBack.visibility = View.GONE
+            buttonAddCity.visibility = View.GONE
+            title.visibility = View.GONE
         }
 
         buttonBack.setOnClickListener {
@@ -53,6 +57,13 @@ class SelectCity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val builder = GsonBuilder()
+        val gson: Gson = builder.create()
+        val favoritesMap: MutableMap<String, String> = gson.fromJson(getSavedFavorites(), object : TypeToken<MutableMap<String, String>>() {}.type)
+
+        val listView: ListView = findViewById(R.id.fav_cities)
+
+
         if (favoritesMap.isEmpty()){
             val CTAContent = findViewById<ConstraintLayout>(R.id.noCities)
             val listContent = findViewById<ConstraintLayout>(R.id.cityList)
@@ -63,7 +74,8 @@ class SelectCity : AppCompatActivity() {
             val listContent = findViewById<ConstraintLayout>(R.id.cityList)
             CTAContent.visibility = View.GONE
             listContent.visibility = View.VISIBLE
-            val list : List<String> = fillList(favoritesMap)
+
+            val list: List<String> = fillList(favoritesMap)
             listView.adapter = FavoriteListAdapter(
                 this,
                 R.layout.favorite_cities_element,
@@ -80,6 +92,24 @@ class SelectCity : AppCompatActivity() {
                     }
                 }
 
+            listView.onItemLongClickListener =
+                AdapterView.OnItemLongClickListener { _, _, position, _ ->
+                    val message: String = list[position].split("=")[0]
+                    AlertDialog.Builder(this)
+                        .setTitle("Удалить место?")
+                        .setMessage(message)
+                        .setPositiveButton("Да") { _, _ ->
+                            favoritesMap.remove(list[position].split("=")[0])
+                            saveFavorites(gson.toJson(favoritesMap))
+                            loadContent()
+                        }
+                        .setCancelable(true)
+                        .setNeutralButton("Отмена") { _, _ ->
+
+                        }
+                        .show()
+                    true
+                }
         }
     }
 

@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setVisibleContent()
 
         position = getSavedPosition()
         if (position > -1){
@@ -54,36 +53,52 @@ class MainActivity : AppCompatActivity() {
             savePosition(-1)
         }
 
-        val citySelector = findViewById<Button>(R.id.citySelection)
-        val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
-        val settings = findViewById<Button>(R.id.settings)
-
-        swipeRefresh.setOnRefreshListener {
-            setContent()
-        }
-
-        settings.setOnClickListener {
-            intent = Intent(this, Settings::class.java)
-            startActivity(intent)
-        }
-
-        val reloadErrBtn = findViewById<Button>(R.id.reload_in_error)
-
-        reloadErrBtn.setOnClickListener {
-            setContent()
-        }
-
-        citySelector.setOnClickListener {
-            intent = Intent(this, SelectCity::class.java)
-            startActivity(intent)
-        }
-        setContent()
-
+        setAll()
     }
 
     override fun onResume() {
-        setContent()
+        setAll()
         super.onResume()
+    }
+
+    private fun setAll(){
+        val builder = GsonBuilder()
+        val gson: Gson = builder.create()
+        val favoritesMap: MutableMap<String, String> = gson.fromJson(getSavedFavorites(), object : TypeToken<MutableMap<String, String>>() {}.type)
+
+
+        if (favoritesMap.isEmpty()) {
+            intent = Intent(this, SelectCity::class.java)
+            startActivity(intent)
+        }
+        else {
+            setVisibleContent()
+
+            val citySelector = findViewById<Button>(R.id.citySelection)
+            val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+            val settings = findViewById<Button>(R.id.settings)
+
+            swipeRefresh.setOnRefreshListener {
+                setContent()
+            }
+
+            settings.setOnClickListener {
+                intent = Intent(this, Settings::class.java)
+                startActivity(intent)
+            }
+
+            val reloadErrBtn = findViewById<Button>(R.id.reload_in_error)
+
+            reloadErrBtn.setOnClickListener {
+                setContent()
+            }
+
+            citySelector.setOnClickListener {
+                intent = Intent(this, SelectCity::class.java)
+                startActivity(intent)
+            }
+            setContent()
+        }
     }
 
     private fun setContent(){
