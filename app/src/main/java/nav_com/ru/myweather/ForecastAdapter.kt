@@ -117,11 +117,10 @@ class ForecastAdapter (
 
     private fun getTemperature(temp: Any, end: Int) : String {
         val intTemp = temp.toString().toFloat().roundToInt()
-        val ending = if (end == 0) "C" else "F"
         return if (intTemp > 0)
-            "+$intTemp°$ending"
+            "+$intTemp°"
         else
-            "$intTemp°$ending"
+            "$intTemp°"
     }
 
     private fun getTrueDate(date: Any) : String {

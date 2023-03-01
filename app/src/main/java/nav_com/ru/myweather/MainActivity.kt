@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
             val citySelector = findViewById<Button>(R.id.citySelection)
             val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
-            val settings = findViewById<Button>(R.id.settings)
+            val settings = findViewById<ImageButton>(R.id.settings)
 
             swipeRefresh.setOnRefreshListener {
                 setContent()
@@ -87,9 +87,9 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-            val reloadErrBtn = findViewById<Button>(R.id.reload_in_error)
+            val reloadErr = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutErr)
 
-            reloadErrBtn.setOnClickListener {
+            reloadErr.setOnRefreshListener {
                 setContent()
             }
 
@@ -252,11 +252,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun getTemperature(temp: Any) : String {
         val intTemp = temp.toString().toFloat().roundToInt()
-        val ending = if (getSavedTemperature() == 0) "C" else "F"
         return if (intTemp > 0)
-            "+$intTemp°$ending"
+            "+$intTemp°"
         else
-            "$intTemp°$ending"
+            "$intTemp°"
     }
 
     private fun getPressure(pressure: Any) : String {
@@ -312,7 +311,9 @@ class MainActivity : AppCompatActivity() {
         val citySelector = findViewById<Button>(R.id.citySelection)
         val errorContent = findViewById<ConstraintLayout>(R.id.errorContent)
         val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+        val swipeRefreshErr = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutErr)
 
+        swipeRefreshErr.isRefreshing = false
         when (main) {
             0 -> mainContent.visibility = View.GONE
             1 -> mainContent.visibility = View.VISIBLE
@@ -345,8 +346,7 @@ class MainActivity : AppCompatActivity() {
             errorText.text = when (errCode) {
                 0 -> "Нет соединения с сервером"
                 1 -> "Ошибка сервера. Код: $cod"
-                2 -> "Не выбран город для прогноза"
-                else -> "Неизвестная ошибка. Попробуйте позже"
+                else -> "Неизвестная ошибка"
             }
             setVisibleContent(0, 0, 1)
         }
