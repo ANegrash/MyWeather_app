@@ -163,16 +163,16 @@ class MainActivity : AppCompatActivity() {
                                 setVisibleContent()
 
                                 wind.setOnClickListener {
-                                    Toast.makeText(this@MainActivity, "Скорость и направление ветра", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@MainActivity, getString(R.string.toast_wind), Toast.LENGTH_SHORT).show()
                                 }
                                 pressure.setOnClickListener {
-                                    Toast.makeText(this@MainActivity, "Атмосферное давление", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@MainActivity, getString(R.string.settings_pressure_title), Toast.LENGTH_SHORT).show()
                                 }
                                 humidity.setOnClickListener {
-                                    Toast.makeText(this@MainActivity, "Влажность", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@MainActivity, getString(R.string.humidity), Toast.LENGTH_SHORT).show()
                                 }
                                 feels.setOnClickListener {
-                                    Toast.makeText(this@MainActivity, "Температура \"по ощущениям\"", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@MainActivity, getString(R.string.toast_feels), Toast.LENGTH_SHORT).show()
                                 }
                             }
                         } else {
@@ -256,23 +256,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun getPressure(pressure: Any) : String {
         return if (getSavedPressure() == 0)
-            "" + (pressure.toString().toFloat() * 0.750064).roundToInt().toString() + " мм.рт.ст"
+            "" + (pressure.toString().toFloat() * 0.750064).roundToInt().toString() + " " + getString(R.string.pressure_mmrtst)
         else
-            "" + pressure.toString().toFloat().roundToInt() + " гПа"
+            "" + pressure.toString().toFloat().roundToInt() + " " + getString(R.string.pressure_hpa)
     }
 
     private fun getWindInfo(speed: Any, degrees: Any) : String {
         val resultSystem = getSavedTemperature()
         val power = if (resultSystem == 0){
             if (getSavedWindPower() == 0)
-                "" + speed.toString().toFloat().roundToInt() + " м/с, "
+                "" + speed.toString().toFloat().roundToInt() + " " + getString(R.string.windPower_ms) + ", "
             else
-                "" + String.format("%.1f", speed.toString().toFloat().roundToInt() * 2.236936) + " миль/ч, "
+                "" + String.format("%.1f", speed.toString().toFloat().roundToInt() * 2.236936) + " " + getString(R.string.windPower_milesh) + ", "
         } else {
             if (getSavedWindPower() == 0)
-                "" + (speed.toString().toFloat().roundToInt() * 0.44704).roundToInt() + " м/с, "
+                "" + (speed.toString().toFloat().roundToInt() * 0.44704).roundToInt() + " " + getString(R.string.windPower_ms) + ", "
             else
-                "" + String.format("%.1f", speed.toString().toFloat()) + " миль/ч, "
+                "" + String.format("%.1f", speed.toString().toFloat()) + " " + getString(R.string.windPower_milesh) + ", "
         }
 
         val deg = degrees.toString().toFloat().roundToInt()
@@ -280,15 +280,15 @@ class MainActivity : AppCompatActivity() {
         var direction = ""
         if (getSavedWindDirection() == 0){
             when (deg) {
-                in 0..23 -> direction = "С"
-                in 24..66 -> direction = "СВ"
-                in 67..113 -> direction = "В"
-                in 114..158 -> direction = "ЮВ"
-                in 159..203 -> direction = "Ю"
-                in 204..248 -> direction = "ЮЗ"
-                in 249..293 -> direction = "З"
-                in 294..338 -> direction = "СЗ"
-                in 339..360 -> direction = "С"
+                in 0..23 -> direction = getString(R.string.direction_N)
+                in 24..66 -> direction = getString(R.string.direction_N) + getString(R.string.direction_E)
+                in 67..113 -> direction = getString(R.string.direction_E)
+                in 114..158 -> direction = getString(R.string.direction_S) + getString(R.string.direction_E)
+                in 159..203 -> direction = getString(R.string.direction_S)
+                in 204..248 -> direction = getString(R.string.direction_S) + getString(R.string.direction_W)
+                in 249..293 -> direction = getString(R.string.direction_W)
+                in 294..338 -> direction = getString(R.string.direction_N) + getString(R.string.direction_W)
+                in 339..360 -> direction = getString(R.string.direction_N)
             }
         } else
             direction = "$deg°"
@@ -336,9 +336,9 @@ class MainActivity : AppCompatActivity() {
         runOnUiThread {
             val errorText = findViewById<TextView>(R.id.error_tw)
             errorText.text = when (errCode) {
-                0 -> "Нет соединения с сервером"
-                1 -> "Ошибка сервера. Код: $cod"
-                else -> "Неизвестная ошибка"
+                0 -> getString(R.string.error_no_connection)
+                1 -> getString(R.string.error_server) + cod
+                else -> getString(R.string.error_unknown)
             }
             setVisibleContent(0, 0, 1)
         }

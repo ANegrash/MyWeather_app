@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/open_sans_bold"
-        android:text="Избранное"
+        android:text="@string/favorites_title"
         android:textColor="@color/dark"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/open_sans"
-                android:text="Давай скорее добавим новое место \nи посмотрим там погоду!"
+                android:text="@string/hello_secondary"
                 android:textAlignment="center"
                 android:textColor="@color/dark"
                 android:textSize="12sp"
@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/open_sans_bold"
-                android:text="Нужен прогноз?"
+                android:text="@string/hello_title"
                 android:textColor="@color/dark"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -120,8 +120,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cityList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:visibility="gone">
+            android:layout_height="match_parent">
 
             <ListView
                 android:id="@+id/fav_cities"

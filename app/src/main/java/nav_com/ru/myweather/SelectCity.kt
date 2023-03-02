@@ -94,9 +94,9 @@ class SelectCity : AppCompatActivity() {
                 AdapterView.OnItemLongClickListener { _, _, position, _ ->
                     val message: String = list[position].split("=")[0]
                     AlertDialog.Builder(this)
-                        .setTitle("Удалить место?")
+                        .setTitle(getString(R.string.delete_place))
                         .setMessage(message)
-                        .setPositiveButton("Да") { _, _ ->
+                        .setPositiveButton(getString(R.string.yes)) { _, _ ->
                             favoritesMap.remove(list[position].split("=")[0])
                             saveFavorites(gson.toJson(favoritesMap))
                             if (getCurrentCity() == list[position].split("=")[0]) {
@@ -111,7 +111,7 @@ class SelectCity : AppCompatActivity() {
                             loadContent()
                         }
                         .setCancelable(true)
-                        .setNeutralButton("Отмена") { _, _ ->
+                        .setNeutralButton(getString(R.string.cancel)) { _, _ ->
 
                         }
                         .show()

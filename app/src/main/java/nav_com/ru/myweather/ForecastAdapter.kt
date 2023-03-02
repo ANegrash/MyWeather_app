@@ -132,18 +132,18 @@ class ForecastAdapter (
         val month = dayPart.split("-")[1]
 
         val monthText = when (month.toInt()) {
-            1 -> "января"
-            2 -> "февраля"
-            3 -> "марта"
-            4 -> "апреля"
-            5 -> "мая"
-            6 -> "июня"
-            7 -> "июля"
-            8 -> "августа"
-            9 -> "сентября"
-            10 -> "октября"
-            11 -> "ноября"
-            12 -> "декабря"
+            1 -> context.getString(R.string.month_jan)
+            2 -> context.getString(R.string.month_feb)
+            3 -> context.getString(R.string.month_mar)
+            4 -> context.getString(R.string.month_apr)
+            5 -> context.getString(R.string.month_may)
+            6 -> context.getString(R.string.month_jun)
+            7 -> context.getString(R.string.month_jul)
+            8 -> context.getString(R.string.month_aug)
+            9 -> context.getString(R.string.month_sep)
+            10 -> context.getString(R.string.month_oct)
+            11 -> context.getString(R.string.month_nov)
+            12 -> context.getString(R.string.month_dec)
             else -> ""
         }
 
@@ -154,10 +154,10 @@ class ForecastAdapter (
 
         if (nowMonth == month.toInt()) {
             if (nowDay == day.toInt()){
-                return "Сегодня"
+                return context.getString(R.string.today)
             }
             else if (nowDay + 1 == day.toInt()){
-                return "Завтра"
+                return context.getString(R.string.tomorrow)
             }
         }
 
@@ -170,18 +170,14 @@ class ForecastAdapter (
         var power = ""
         if (tempMode == 0) {
             if (speedMode == 0)
-                power += "" + speed.toString().toFloat().roundToInt() + " м/с, "
+                power += "" + speed.toString().toFloat().roundToInt() + " " + context.getString(R.string.windPower_ms) + ", "
             else
-                power += "" + String.format(
-                    "%.1f",
-                    speed.toString().toFloat().roundToInt() * 2.236936
-                ) + " м/ч \n"
+                "" + String.format("%.1f", speed.toString().toFloat().roundToInt() * 2.236936) + " " + context.getString(R.string.windPower_milesh) + ", "
         } else {
-            if (speedMode == 0)
-                power += "" + (speed.toString().toFloat()
-                    .roundToInt() * 0.44704).roundToInt() + " м/с, "
+            if (getSavedWindPower() == 0)
+                "" + (speed.toString().toFloat().roundToInt() * 0.44704).roundToInt() + " " + context.getString(R.string.windPower_ms) + ", "
             else
-                power += "" + String.format("%.1f", speed.toString().toFloat()) + " м/ч \n"
+                "" + String.format("%.1f", speed.toString().toFloat()) + " " + context.getString(R.string.windPower_milesh) + ", "
         }
 
         val deg = degrees.toString().toFloat().roundToInt()
@@ -189,15 +185,15 @@ class ForecastAdapter (
         var direction = ""
         if (directionMode == 0){
             when (deg) {
-                in 0..23 -> direction = "С"
-                in 24..66 -> direction = "СВ"
-                in 67..113 -> direction = "В"
-                in 114..158 -> direction = "ЮВ"
-                in 159..203 -> direction = "Ю"
-                in 204..248 -> direction = "ЮЗ"
-                in 249..293 -> direction = "З"
-                in 294..338 -> direction = "СЗ"
-                in 339..360 -> direction = "С"
+                in 0..23 -> direction = context.getString(R.string.direction_N)
+                in 24..66 -> direction = context.getString(R.string.direction_N) + context.getString(R.string.direction_E)
+                in 67..113 -> direction = context.getString(R.string.direction_E)
+                in 114..158 -> direction = context.getString(R.string.direction_S) + context.getString(R.string.direction_E)
+                in 159..203 -> direction = context.getString(R.string.direction_S)
+                in 204..248 -> direction = context.getString(R.string.direction_S) + context.getString(R.string.direction_W)
+                in 249..293 -> direction = context.getString(R.string.direction_W)
+                in 294..338 -> direction = context.getString(R.string.direction_N) + context.getString(R.string.direction_W)
+                in 339..360 -> direction = context.getString(R.string.direction_N)
             }
         } else
             direction = "$deg°"

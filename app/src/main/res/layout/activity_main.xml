@@ -33,7 +33,6 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/open_sans_bold"
-                    android:text="Севастополь"
                     android:textAlignment="viewStart"
                     android:textAllCaps="false"
                     android:textColor="@color/smoky_sky"
@@ -112,7 +111,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:fontFamily="@font/open_sans_bold"
-                            android:text="Ошибка 401"
                             android:textAlignment="center"
                             android:textColor="@color/dark"
                             android:textSize="16sp"
@@ -130,7 +128,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="32dp"
                             android:fontFamily="@font/open_sans"
-                            android:text="Потяните вниз для обновления"
+                            android:text="@string/swipe_down"
                             android:textColor="@color/dark"
                             android:textSize="12sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -148,8 +146,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/loadingContent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:visibility="gone">
+                android:layout_height="match_parent">
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -165,8 +162,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/mainContent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:visibility="gone">
+                android:layout_height="match_parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout"
@@ -206,7 +202,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/centurygothic"
-                            android:text="+21 C"
                             android:textColor="#c5151719"
                             android:textSize="34sp"
                             android:textStyle="bold"
@@ -246,7 +241,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/open_sans"
-                                android:text="2 м/с, В"
                                 android:textColor="@color/smoky_sky"
                                 android:textSize="16sp"
                                 app:chipBackgroundColor="#35000000"
@@ -262,7 +256,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/open_sans"
-                                android:text="762 мм.рт.ст."
                                 android:textColor="@color/smoky_sky"
                                 android:textSize="16sp"
                                 app:chipBackgroundColor="#35000000"
@@ -278,7 +271,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/open_sans"
-                                android:text="57%"
                                 android:textColor="@color/smoky_sky"
                                 android:textSize="16sp"
                                 app:chipBackgroundColor="#35000000"
@@ -294,7 +286,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/open_sans"
-                                android:text="+20 C"
                                 android:textColor="@color/smoky_sky"
                                 android:textSize="16sp"
                                 app:chipBackgroundColor="#35000000"

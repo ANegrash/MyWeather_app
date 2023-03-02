@@ -160,23 +160,23 @@ class SearchCityActivity : AppCompatActivity() {
         when (type){
             0 -> {
                 icon.setImageResource(R.drawable.no_internet)
-                mainText.text = "Нет соединения с сервером"
-                secondaryText.text = "Проверьте наличие интернета или попробуйте позже"
+                mainText.text = getString(R.string.error_no_connection)
+                secondaryText.text = getString(R.string.error_secondary_no_connection)
             }
             1 -> {
                 icon.setImageResource(R.drawable.no_results)
-                mainText.text = "Поиск не дал результатов"
-                secondaryText.text = "Проверьте введённые данные на ошибки"
+                mainText.text = getString(R.string.error_no_results)
+                secondaryText.text = getString(R.string.error_secondary_no_results)
             }
             2 -> {
                 icon.setImageResource(R.drawable.no_results)
-                mainText.text = "Введено мало символов"
-                secondaryText.text = "Для поиска введите минимум 2 символа"
+                mainText.text = getString(R.string.error_need_more_symbols)
+                secondaryText.text = getString(R.string.error_secondary_need_more_symbols)
             }
             3 -> {
                 icon.setImageResource(R.drawable.lets_search)
-                mainText.text = "Добавьте любой город на планете!"
-                secondaryText.text = "1. Введите название в поле выше \n2. Нажмите кнопку поиска \n3. Выберите нужный вариант из списка"
+                mainText.text = getString(R.string.error_add_any_city)
+                secondaryText.text = getString(R.string.error_secondary_add_any_city)
             }
         }
 

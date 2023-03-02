@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Моя погода</string>
     <string name="swipe_down">Потяните вниз для обновления</string>
@@ -20,7 +21,6 @@
     <string name="settings_rate_app">Оценить приложение</string>
     <string name="settings_privacy">Политика конфиденциальности</string>
     <string name="settings_disclaimer">погода получена с openweathermap.org</string>
-    <string name="developer_name" translatable="false">NAV apps</string>
     <string name="settings_with_love">сделано с любовью ❤</string>
     <string name="forecast_morning">Утро</string>
     <string name="forecast_day">День</string>
@@ -34,7 +34,7 @@
     <string name="direction_S">Ю</string>
     <string name="direction_E">В</string>
     <string name="error_no_connection">Нет соединения с сервером</string>
-    <string name="error_server">Ошибка сервера. Код:</string>
+    <string name="error_server">"Ошибка сервера. Код: "</string>
     <string name="error_unknown">Неизвестная ошибка</string>
     <string name="month_jan">января</string>
     <string name="month_feb">февраля</string>
