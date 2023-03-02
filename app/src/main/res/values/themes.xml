@@ -1,10 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.MyWeather" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.MyWeather" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/dark</item>
-        <item name="colorOnPrimary">@color/dark</item>
+        <item name="colorPrimary">@color/day_sky_start</item>
+        <item name="colorPrimaryVariant">@color/dark_mv</item>
+        <item name="colorOnPrimary">@color/dark_mv</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>

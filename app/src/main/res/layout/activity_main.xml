@@ -35,11 +35,11 @@
                     android:fontFamily="@font/open_sans_bold"
                     android:textAlignment="viewStart"
                     android:textAllCaps="false"
-                    android:textColor="@color/smoky_sky"
+                    android:textColor="@color/smoky_sky_mv"
                     android:textSize="16sp"
                     android:typeface="normal"
                     app:icon="@drawable/ic_location"
-                    app:iconTint="@color/smoky_sky"
+                    app:iconTint="@color/smoky_sky_mv"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/settings"
                     app:layout_constraintStart_toStartOf="parent"
@@ -53,11 +53,11 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:background="@android:color/transparent"
-                    app:tint="@color/smoky_sky"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_settings" />
+                    app:srcCompat="@drawable/ic_settings"
+                    app:tint="@color/smoky_sky_mv" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -202,7 +202,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/centurygothic"
-                            android:textColor="#c5151719"
+                            android:textColor="@color/dark"
                             android:textSize="34sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -241,14 +241,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/open_sans"
-                                android:textColor="@color/smoky_sky"
+                                android:textColor="@color/smoky_sky_mv"
                                 android:textSize="16sp"
                                 app:chipBackgroundColor="#35000000"
                                 app:chipIcon="@drawable/wind_2"
                                 app:chipIconEnabled="true"
                                 app:chipIconSize="26dp"
                                 app:chipIconVisible="true"
-                                app:chipStrokeColor="@color/dark"
+                                app:chipStrokeColor="@color/dark_mv"
                                 app:chipSurfaceColor="#00000000" />
 
                             <com.google.android.material.chip.Chip
@@ -256,14 +256,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/open_sans"
-                                android:textColor="@color/smoky_sky"
+                                android:textColor="@color/smoky_sky_mv"
                                 android:textSize="16sp"
                                 app:chipBackgroundColor="#35000000"
                                 app:chipIcon="@drawable/pressure"
                                 app:chipIconEnabled="true"
                                 app:chipIconSize="26dp"
                                 app:chipIconVisible="true"
-                                app:chipStrokeColor="@color/dark"
+                                app:chipStrokeColor="@color/dark_mv"
                                 app:chipSurfaceColor="#00000000" />
 
                             <com.google.android.material.chip.Chip
@@ -271,14 +271,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/open_sans"
-                                android:textColor="@color/smoky_sky"
+                                android:textColor="@color/smoky_sky_mv"
                                 android:textSize="16sp"
                                 app:chipBackgroundColor="#35000000"
                                 app:chipIcon="@drawable/humidity"
                                 app:chipIconEnabled="true"
                                 app:chipIconSize="26dp"
                                 app:chipIconVisible="true"
-                                app:chipStrokeColor="@color/dark"
+                                app:chipStrokeColor="@color/dark_mv"
                                 app:chipSurfaceColor="#00000000" />
 
                             <com.google.android.material.chip.Chip
@@ -286,14 +286,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/open_sans"
-                                android:textColor="@color/smoky_sky"
+                                android:textColor="@color/smoky_sky_mv"
                                 android:textSize="16sp"
                                 app:chipBackgroundColor="#35000000"
                                 app:chipIcon="@drawable/feeling"
                                 app:chipIconEnabled="true"
                                 app:chipIconSize="26dp"
                                 app:chipIconVisible="true"
-                                app:chipStrokeColor="@color/dark"
+                                app:chipStrokeColor="@color/dark_mv"
                                 app:chipSurfaceColor="#00000000" />
                         </com.google.android.material.chip.ChipGroup>
                     </androidx.constraintlayout.widget.ConstraintLayout>
