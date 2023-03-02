@@ -15,6 +15,7 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
+import java.util.*
 
 class SearchCityActivity : AppCompatActivity() {
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
@@ -46,6 +47,9 @@ class SearchCityActivity : AppCompatActivity() {
         query: String
     ) {
         setContent(0, 1,0)
+
+        val lang : String = if (Locale.getDefault().language == "en") "en" else "ru"
+
         val requestUrl =
             "https://api.openweathermap.org/geo/1.0/direct?" +
                     "q=$query" +
@@ -92,7 +96,7 @@ class SearchCityActivity : AppCompatActivity() {
                                             val array: Map<String, String> = obj.local_names
 
                                             val cityName = if (array != null)
-                                                if (array.containsKey("ru")) array["ru"].toString() else obj.name
+                                                if (array.containsKey(lang)) array[lang].toString() else obj.name
                                             else
                                                 obj.name
 

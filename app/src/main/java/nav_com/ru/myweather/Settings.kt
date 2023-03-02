@@ -4,9 +4,15 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 
@@ -26,6 +32,11 @@ class Settings : AppCompatActivity() {
         val switchWind = findViewById<SwitchCompat>(R.id.switchWind)
         val switchWindDirection = findViewById<SwitchCompat>(R.id.switchWindDir)
         val switchPress = findViewById<SwitchCompat>(R.id.switchPress)
+        val radioGroup = findViewById<RadioGroup>(R.id.radioGroup)
+        val radioSystem = findViewById<RadioButton>(R.id.radioTheme_system)
+        val radioLight = findViewById<RadioButton>(R.id.radioTheme_light)
+        val radioDark = findViewById<RadioButton>(R.id.radioTheme_dark)
+        val radioTxt = findViewById<TextView>(R.id.textView27)
 
         val rate = findViewById<ConstraintLayout>(R.id.rate_layout)
         val privacy = findViewById<ConstraintLayout>(R.id.priacy)
@@ -34,6 +45,26 @@ class Settings : AppCompatActivity() {
         switchWind.isChecked = getSavedWindPower() != 0
         switchWindDirection.isChecked = getSavedWindDirection() != 0
         switchPress.isChecked = getSavedPressure() != 0
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
+            when (getSavedTheme()){
+                0 -> radioSystem.isChecked = true
+                1 -> radioLight.isChecked = true
+                2 -> radioDark.isChecked = true
+            }
+
+            radioGroup.setOnCheckedChangeListener { _, id ->
+                when (id) {
+                    R.id.radioTheme_system -> setTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, 0)
+                    R.id.radioTheme_light -> setTheme(AppCompatDelegate.MODE_NIGHT_NO, 1)
+                    R.id.radioTheme_dark -> setTheme(AppCompatDelegate.MODE_NIGHT_YES, 2)
+                }
+
+            }
+        } else {
+            radioGroup.visibility = View.GONE
+            radioTxt.visibility = View.GONE
+        }
 
         switchTemperature.setOnCheckedChangeListener { _, isChecked ->
             saveTemperature(if (isChecked) 1 else 0)
@@ -76,6 +107,10 @@ class Settings : AppCompatActivity() {
         }
     }
 
+    private fun saveTheme(theme: Int) = sharedPrefs.edit().putInt(KEY_THEME, theme).apply()
+
+    private fun getSavedTheme() = sharedPrefs.getInt(KEY_THEME, 0)
+
     private fun saveTemperature (t: Int) = sharedPrefs.edit().putInt(KEY_TEMPERATURE, t).apply()
 
     private fun getSavedTemperature() = sharedPrefs.getInt(KEY_TEMPERATURE, 0)
@@ -91,4 +126,9 @@ class Settings : AppCompatActivity() {
     private fun savePressure (p: Int) = sharedPrefs.edit().putInt(KEY_PRESSURE, p).apply()
 
     private fun getSavedPressure() = sharedPrefs.getInt(KEY_PRESSURE, 0)
+
+    private fun setTheme(themeMode: Int, prefsMode: Int) {
+        AppCompatDelegate.setDefaultNightMode(themeMode)
+        saveTheme(prefsMode)
+    }
 }

@@ -273,7 +273,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/switchPress"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup"
                 app:layout_constraintVertical_bias="0.0">
 
                 <ImageView
@@ -383,6 +383,54 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+            <TextView
+                android:id="@+id/textView27"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/open_sans"
+                android:text="@string/settings_theme_title"
+                android:textColor="@color/dark"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/switchPress" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView27">
+
+                <RadioButton
+                    android:id="@+id/radioTheme_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans"
+                    android:text="@string/settings_theme_light"
+                    android:textColor="@color/dark" />
+
+                <RadioButton
+                    android:id="@+id/radioTheme_dark"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans"
+                    android:text="@string/settings_theme_dark"
+                    android:textColor="@color/dark" />
+
+                <RadioButton
+                    android:id="@+id/radioTheme_system"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans"
+                    android:text="@string/settings_theme_system"
+                    android:textColor="@color/dark" />
+            </RadioGroup>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

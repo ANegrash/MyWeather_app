@@ -161,7 +161,10 @@ class ForecastAdapter (
             }
         }
 
-        result = "" + day.toInt() + " " + monthText
+        result = if (Locale.getDefault().language == "en")
+            monthText + ", " + day.toInt()
+        else
+            "" + day.toInt() + " " + monthText
 
         return result
     }

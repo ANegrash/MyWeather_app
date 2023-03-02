@@ -3,10 +3,12 @@ package nav_com.ru.myweather
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.chip.Chip
@@ -20,6 +22,7 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
+import java.util.*
 import kotlin.math.roundToInt
 
 const val PREFS_NAME = "myWeather_prefs"
@@ -30,6 +33,7 @@ const val KEY_WIND_DIRECTION = "prefs.wind_direction"
 const val KEY_PRESSURE = "prefs.pressure"
 const val KEY_FAVORITE_LIST = "prefs.favorite_list"
 const val KEY_CURRENT_CITY = "prefs.current_city"
+const val KEY_THEME = "prefs.theme"
 class MainActivity : AppCompatActivity() {
 
     private val listOfCities = arrayOf("Адлер", "Алушта", "Джанкой", "Евпатория", "Елец", "Керчь", "Москва", "Нижневартовск", "Саки", "Санкт-Петербург", "Севастополь",  "Симферополь", "Сочи", "Феодосия", "Чайковский", "Ялта")
@@ -41,6 +45,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
+            when (getSavedTheme()){
+                0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+        }
 
         position = getSavedPosition()
         if (position > -1){
@@ -105,6 +117,7 @@ class MainActivity : AppCompatActivity() {
 
         val ll = getCurrentLL(currentCity)
 
+        val lang : String = if (Locale.getDefault().language == "en") "en" else "ru"
 
         val units = if (getSavedTemperature() == 0)
             "metric"
@@ -114,13 +127,13 @@ class MainActivity : AppCompatActivity() {
         val requestUrl =
             "https://api.openweathermap.org/data/2.5/weather?$ll" +
                     "&appid=ddd069d11b1e504d8268d4ee774ddd64" +
-                    "&lang=ru" +
+                    "&lang=$lang" +
                     "&units=" + units
 
         val forecastUrl =
             "https://api.openweathermap.org/data/2.5/forecast?$ll" +
                     "&appid=ddd069d11b1e504d8268d4ee774ddd64" +
-                    "&lang=ru" +
+                    "&lang=$lang" +
                     "&units=" + units
 
         val request = Request()
@@ -355,11 +368,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun getSavedFavorites() = sharedPrefs.getString(KEY_FAVORITE_LIST, "{}")
 
+    private fun saveTheme(theme: Int) = sharedPrefs.edit().putInt(KEY_THEME, theme).apply()
+
+    private fun getSavedTheme() = sharedPrefs.getInt(KEY_THEME, 0)
+
     private fun saveCurrentCity (city: String) = sharedPrefs.edit().putString(KEY_CURRENT_CITY, city).apply()
 
     private fun getCurrentCity() = sharedPrefs.getString(KEY_CURRENT_CITY, "")
 
-    private fun savePosition (theme: Int) = sharedPrefs.edit().putInt(KEY_POSITION, theme).apply()
+    private fun savePosition (position: Int) = sharedPrefs.edit().putInt(KEY_POSITION, position).apply()
 
     private fun getSavedPosition() = sharedPrefs.getInt(KEY_POSITION, -2)
 

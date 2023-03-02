@@ -60,4 +60,9 @@
     <string name="delete_place">Удалить место?</string>
     <string name="yes">Да</string>
     <string name="cancel">Отмена</string>
+    <string name="settings_theme_title">Тема</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Тёмная</string>
+    <string name="settings_theme_system">Системная</string>
+    <string name="error_no_themes">Изменение тем недоступно на вашем устройстве</string>
 </resources>

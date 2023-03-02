@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import nav_com.ru.myweather.models.SearchCity
+import java.util.*
 
 class SearchCityAdapter (
     context: Context?,
@@ -31,8 +32,10 @@ class SearchCityAdapter (
 
         val array : Map<String, String> = obj.local_names
 
+        val lang : String = if (Locale.getDefault().language == "en") "en" else "ru"
+
         val cityName = if (array != null)
-            if (array.containsKey("ru")) array["ru"].toString() else obj.name
+            if (array.containsKey(lang)) array[lang].toString() else obj.name
         else
             obj.name
 

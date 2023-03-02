@@ -60,4 +60,9 @@
     <string name="delete_place">Delete place?</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_system">System</string>
+    <string name="error_no_themes">Unsupported thing on your device</string>
 </resources>
