@@ -2,6 +2,9 @@ package nav_com.ru.myweather
 
 import android.content.Context
 import android.content.Intent
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -39,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private val listOfCities = arrayOf("Адлер", "Алушта", "Джанкой", "Евпатория", "Елец", "Керчь", "Москва", "Нижневартовск", "Саки", "Санкт-Петербург", "Севастополь",  "Симферополь", "Сочи", "Феодосия", "Чайковский", "Ялта")
     private val listOfCitylls = arrayOf("43.4253834, 39.9237036", "44.677112, 34.4095393", "45.7093755, 34.3899131", "45.1907635, 33.3679049", "52.6219865, 38.5003298", "45.3534002, 36.4538645", "55.750446, 37.617493", "60.9339411, 76.5814274", "45.1319466, 33.6001281", "59.938732, 30.316229", "44.6054434, 33.5220842",  "44.9521459, 34.1024858", "43.5854823, 39.723109", "45.033669, 35.3753628", "56.7787468, 54.1500704", "44.49707, 34.158688")
     private var position : Int = 0
+    private var locationManager : LocationManager? = null
 
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
 
@@ -112,7 +116,17 @@ class MainActivity : AppCompatActivity() {
     private fun setContent(){
         val currentCity = getCurrentCity().toString()
         val citySelector = findViewById<Button>(R.id.citySelection)
-        citySelector.text = currentCity
+
+        if (currentCity == "current") {
+            citySelector.text = resources.getString(R.string.current_place)
+            locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
+            try {
+                locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0F, locationListener)
+            } catch (e: SecurityException){
+                setErrorCode(2)
+            }
+        } else
+            citySelector.text = currentCity
         setVisibleContent(0, 1, 0)
 
         val ll = getCurrentLL(currentCity)
@@ -351,17 +365,31 @@ class MainActivity : AppCompatActivity() {
             errorText.text = when (errCode) {
                 0 -> getString(R.string.error_no_connection)
                 1 -> getString(R.string.error_server) + cod
+                2 -> resources.getString(R.string.location_error)
                 else -> getString(R.string.error_unknown)
             }
             setVisibleContent(0, 0, 1)
         }
     }
 
-    private fun getCurrentLL(city: String) : String{
+    private val locationListener: LocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            saveFavorites("" + location.latitude + ", " + location.longitude)
+        }
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+        override fun onProviderEnabled(provider: String) {}
+        override fun onProviderDisabled(provider: String) {}
+    }
+
+    private fun getCurrentLL(city: String) : String {
         val builder = GsonBuilder()
         val gson: Gson = builder.create()
-        val favoritesMap: MutableMap<String, String> = gson.fromJson(getSavedFavorites(), object : TypeToken<MutableMap<String, String>>() {}.type)
-        return "lat=" + favoritesMap[city].toString().split(", ")[0] + "&lon=" + favoritesMap[city].toString().split(", ")[1]
+        val favoritesMap: MutableMap<String, String> = gson.fromJson(
+            getSavedFavorites(),
+            object : TypeToken<MutableMap<String, String>>() {}.type
+        )
+        return "lat=" + favoritesMap[city].toString()
+            .split(", ")[0] + "&lon=" + favoritesMap[city].toString().split(", ")[1]
     }
 
     private fun saveFavorites(fav: String) = sharedPrefs.edit().putString(KEY_FAVORITE_LIST, fav).apply()

@@ -32,6 +32,7 @@ class SelectCity : AppCompatActivity() {
         val buttonAddCity: ImageButton = findViewById(R.id.addNewCity)
         val buttonAddCityCTA: ImageButton = findViewById(R.id.addNewCityCTA)
         val title: TextView = findViewById(R.id.textViewTitle)
+        val currentPlaceBtn: ConstraintLayout = findViewById(R.id.currentPlace)
 
         if (getSavedFavorites() == "{}") {
             buttonBack.visibility = View.GONE
@@ -53,6 +54,13 @@ class SelectCity : AppCompatActivity() {
         buttonAddCityCTA.setOnClickListener {
             intent = Intent(this, SearchCityActivity::class.java)
             startActivity(intent)
+        }
+
+        currentPlaceBtn.setOnClickListener {
+            saveCurrentCity("current")
+            intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         val builder = GsonBuilder()

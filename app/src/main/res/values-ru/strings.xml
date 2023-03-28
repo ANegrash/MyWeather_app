@@ -65,4 +65,6 @@
     <string name="settings_theme_dark">Тёмная</string>
     <string name="settings_theme_system">Системная</string>
     <string name="error_no_themes">Изменение тем недоступно на вашем устройстве</string>
+    <string name="current_place">Текущее место</string>
+    <string name="location_error">Ошибка определения местоположения</string>
 </resources>
