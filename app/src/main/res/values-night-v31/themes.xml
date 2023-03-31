@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SplashActivityTheme" parent="Theme.SplashScreen.IconBackground">
+        <item name="android:windowSplashScreenBackground">@color/smoky_sky</item>
+        <item name="android:windowSplashScreenAnimationDuration">1000</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/made_in_russia_light</item>
+    </style>
+</resources>

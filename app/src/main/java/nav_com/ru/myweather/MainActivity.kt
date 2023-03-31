@@ -2,6 +2,7 @@ package nav_com.ru.myweather
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.AnimationDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.chip.Chip
 import com.google.gson.Gson
@@ -43,7 +45,11 @@ class MainActivity : AppCompatActivity() {
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_MyWeather)
+        actionBar?.hide()
+        window.statusBarColor = resources.getColor(R.color.dark_mv)
         setContentView(R.layout.activity_main)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
@@ -62,6 +68,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         setAll()
+    }
+
+    override fun onBackPressed() {
+        finishAffinity()
     }
 
     override fun onResume() {
@@ -175,6 +185,9 @@ class MainActivity : AppCompatActivity() {
 
                                 setVisibleContent()
 
+                                weatherIcon.setOnClickListener {
+                                    Toast.makeText(this@MainActivity, weatherObject.weather[0].description.toString(), Toast.LENGTH_SHORT).show()
+                                }
                                 wind.setOnClickListener {
                                     Toast.makeText(this@MainActivity, getString(R.string.toast_wind), Toast.LENGTH_SHORT).show()
                                 }
@@ -246,7 +259,6 @@ class MainActivity : AppCompatActivity() {
                                     forecastList
                                 )
                                 listView.adapter = forecastAdapter
-
                             }
                         } else {
                             runOnUiThread {
@@ -319,6 +331,10 @@ class MainActivity : AppCompatActivity() {
         val errorContent = findViewById<ConstraintLayout>(R.id.errorContent)
         val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
         val swipeRefreshErr = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutErr)
+        val imageView = findViewById<ImageView>(R.id.loadingImage)
+        imageView.setBackgroundResource(R.drawable.loading)
+
+        val animationLoading : AnimationDrawable = imageView.background as AnimationDrawable
 
         swipeRefreshErr.isRefreshing = false
         when (main) {
@@ -328,10 +344,12 @@ class MainActivity : AppCompatActivity() {
 
         when (loading) {
             0 -> {
+                animationLoading.stop()
                 loadingContent.visibility = View.GONE
                 swipeRefresh.isRefreshing = false
             }
             1 -> {
+                animationLoading.start()
                 loadingContent.visibility = View.VISIBLE
             }
         }
@@ -367,8 +385,6 @@ class MainActivity : AppCompatActivity() {
     private fun saveFavorites(fav: String) = sharedPrefs.edit().putString(KEY_FAVORITE_LIST, fav).apply()
 
     private fun getSavedFavorites() = sharedPrefs.getString(KEY_FAVORITE_LIST, "{}")
-
-    private fun saveTheme(theme: Int) = sharedPrefs.edit().putInt(KEY_THEME, theme).apply()
 
     private fun getSavedTheme() = sharedPrefs.getInt(KEY_THEME, 0)
 

@@ -6,7 +6,7 @@
     <string name="favorites_title">Избранное</string>
     <string name="hello_title">Нужен прогноз?</string>
     <string name="hello_secondary">Давай скорее добавим новое место \nи посмотрим там погоду!</string>
-    <string name="settings_title" >Настройки</string>
+    <string name="settings_title">Настройки</string>
     <string name="settings_temperature_title">Температура</string>
     <string name="settings_windPower_title">Скорость ветра</string>
     <string name="settings_windDirection_title">Направление ветра</string>

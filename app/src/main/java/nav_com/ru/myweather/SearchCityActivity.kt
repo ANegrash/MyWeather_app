@@ -2,6 +2,7 @@ package nav_com.ru.myweather
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.AnimationDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -137,6 +138,10 @@ class SearchCityActivity : AppCompatActivity() {
         val mainContent = findViewById<ListView>(R.id.listOfSearch)
         val loadingContent = findViewById<ConstraintLayout>(R.id.loading_inSearch)
         val errorContent = findViewById<ConstraintLayout>(R.id.error_inSearch)
+        val imageView = findViewById<ImageView>(R.id.loadingInSearch)
+        imageView.setBackgroundResource(R.drawable.loading)
+
+        val animationLoading : AnimationDrawable = imageView.background as AnimationDrawable
 
         when (main) {
             0 -> mainContent.visibility = View.GONE
@@ -144,8 +149,14 @@ class SearchCityActivity : AppCompatActivity() {
         }
 
         when (loading) {
-            0 -> loadingContent.visibility = View.GONE
-            1 -> loadingContent.visibility = View.VISIBLE
+            0 -> {
+                animationLoading.stop()
+                loadingContent.visibility = View.GONE
+            }
+            1 -> {
+                animationLoading.start()
+                loadingContent.visibility = View.VISIBLE
+            }
         }
 
         when (error) {

@@ -77,7 +77,7 @@ class ForecastAdapter (
             morning_temperature.text = getTemperature(dayObject[0].main.temp, temperSys)
             morning_wind.text = getWindInfo(dayObject[0].wind.speed, dayObject[0].wind.deg, temperSys, windPowerSys, windDirectSys)
             val uri: Uri =
-                Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + dayObject[0].weather[0].icon)
+                Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + toDay(dayObject[0].weather[0].icon.toString()))
             morning_icon.setImageURI(null)
             morning_icon.setImageURI(uri)
         }
@@ -86,7 +86,7 @@ class ForecastAdapter (
             day_temperature.text = getTemperature(dayObject[1].main.temp, temperSys)
             day_wind.text = getWindInfo(dayObject[1].wind.speed, dayObject[1].wind.deg, temperSys, windPowerSys, windDirectSys)
             val uri1: Uri =
-                Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + dayObject[1].weather[0].icon)
+                Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + toDay(dayObject[1].weather[0].icon.toString()))
             day_icon.setImageURI(null)
             day_icon.setImageURI(uri1)
         }
@@ -95,7 +95,7 @@ class ForecastAdapter (
             evening_temperature.text = getTemperature(dayObject[2].main.temp, temperSys)
             evening_wind.text = getWindInfo(dayObject[2].wind.speed, dayObject[2].wind.deg, temperSys, windPowerSys, windDirectSys)
             val uri2: Uri =
-                Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + dayObject[2].weather[0].icon)
+                Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + toNight(dayObject[2].weather[0].icon.toString()))
             evening_icon.setImageURI(null)
             evening_icon.setImageURI(uri2)
         }
@@ -104,7 +104,7 @@ class ForecastAdapter (
             night_temperature.text = getTemperature(dayObject[3].main.temp, temperSys)
             night_wind.text = getWindInfo(dayObject[3].wind.speed, dayObject[3].wind.deg, temperSys, windPowerSys, windDirectSys)
             val uri3: Uri =
-                Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + dayObject[3].weather[0].icon)
+                Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + toNight(dayObject[3].weather[0].icon.toString()))
             night_icon.setImageURI(null)
             night_icon.setImageURI(uri3)
         }
@@ -202,6 +202,14 @@ class ForecastAdapter (
             direction = "$deg°"
 
         return power + direction
+    }
+
+    private fun toDay(src: String) : String{
+        return src.dropLast(1) + "d"
+    }
+
+    private fun toNight(src: String) : String{
+        return src.dropLast(1) + "n"
     }
 
     private fun getSavedTemperature() = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getInt(KEY_TEMPERATURE, 0)
