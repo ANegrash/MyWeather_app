@@ -170,10 +170,9 @@ class ForecastAdapter (
     }
 
     private fun getWindInfo(speed: Any, degrees: Any, tempMode: Int, speedMode: Int, directionMode: Int) : String {
-        var power = ""
-        if (tempMode == 0) {
+        val power = if (tempMode == 0) {
             if (speedMode == 0)
-                power += "" + speed.toString().toFloat().roundToInt() + " " + context.getString(R.string.windPower_ms) + ", "
+                "" + speed.toString().toFloat().roundToInt() + " " + context.getString(R.string.windPower_ms) + ", "
             else
                 "" + String.format("%.1f", speed.toString().toFloat().roundToInt() * 2.236936) + " " + context.getString(R.string.windPower_milesh) + ", "
         } else {
