@@ -19,6 +19,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import nav_com.ru.myweather.models.ForecastItem
 import nav_com.ru.myweather.models.ForecastResponse
+import nav_com.ru.myweather.models.Weather
 import nav_com.ru.myweather.models.WeatherResponse
 import okhttp3.Call
 import okhttp3.Callback
@@ -41,6 +42,8 @@ class MainActivity : AppCompatActivity() {
     private val listOfCities = arrayOf("Адлер", "Алушта", "Джанкой", "Евпатория", "Елец", "Керчь", "Москва", "Нижневартовск", "Саки", "Санкт-Петербург", "Севастополь",  "Симферополь", "Сочи", "Феодосия", "Чайковский", "Ялта")
     private val listOfCitylls = arrayOf("43.4253834, 39.9237036", "44.677112, 34.4095393", "45.7093755, 34.3899131", "45.1907635, 33.3679049", "52.6219865, 38.5003298", "45.3534002, 36.4538645", "55.750446, 37.617493", "60.9339411, 76.5814274", "45.1319466, 33.6001281", "59.938732, 30.316229", "44.6054434, 33.5220842",  "44.9521459, 34.1024858", "43.5854823, 39.723109", "45.033669, 35.3753628", "56.7787468, 54.1500704", "44.49707, 34.158688")
     private var position : Int = 0
+
+    private val usedHours: Array<Int> = arrayOf(6, 12, 18, 21)
 
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
 
@@ -66,8 +69,6 @@ class MainActivity : AppCompatActivity() {
             saveFavorites("{\"" + listOfCities[position] + "\":\"" + listOfCitylls[position] + "\"}")
             savePosition(-1)
         }
-
-        setAll()
     }
 
     override fun onBackPressed() {
@@ -79,11 +80,10 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
     }
 
-    private fun setAll(){
+    private fun setAll() {
         val builder = GsonBuilder()
         val gson: Gson = builder.create()
         val favoritesMap: MutableMap<String, String> = gson.fromJson(getSavedFavorites(), object : TypeToken<MutableMap<String, String>>() {}.type)
-
 
         if (favoritesMap.isEmpty()) {
             intent = Intent(this, SelectCity::class.java)
@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setContent(){
+    private fun setContent() {
         val currentCity = getCurrentCity().toString()
         val citySelector = findViewById<Button>(R.id.citySelection)
         citySelector.text = currentCity
@@ -221,7 +221,7 @@ class MainActivity : AppCompatActivity() {
                 @Throws(IOException::class)
                 override fun onResponse(call: Call, response: Response) {
                     if (response.body != null) {
-                        val stringResponse = response.body!!.string()
+                        val stringResponse = response.body.string()
                         val builder = GsonBuilder()
                         val gson: Gson = builder.create()
 
@@ -231,32 +231,38 @@ class MainActivity : AppCompatActivity() {
                             runOnUiThread {
                                 val listView = findViewById<ListView>(R.id.forecast_list)
                                 val listOfWeathers = forecastObject.list
-                                val firstItem = checkDayForecast(listOfWeathers)
-                                val lastItem = forecastObject.cnt - 1
-                                val forecastList = mutableListOf<Array<ForecastItem>>()
-                                var index = 0
-                                for (i in firstItem until listOfWeathers.size) {
-                                    var tempArray : Array<ForecastItem> = emptyArray()
-                                    for (j in 0..3){
-                                        val currentIndex = index * 7 + i + j * 2
-                                        tempArray += if (currentIndex <= lastItem)
-                                            listOfWeathers[currentIndex]
-                                        else if (currentIndex - 1 <= lastItem)
-                                            listOfWeathers[currentIndex - 1]
-                                        else
-                                            break
-                                    }
-                                    index++
-                                    if (tempArray.isNotEmpty()) {
-                                        forecastList += tempArray
-                                    }else
-                                        break
-                                }
+                                val forecastList = mutableListOf<ForecastItem>()
+
+                                val firstWeatherItemHour = getItemHour(listOfWeathers[0])
+                                if (firstWeatherItemHour > 6)
+                                    forecastList += ForecastItem(null, null, listOf(Weather(0, "", "", "")), null, null, null, null, null, null, null, listOfWeathers[0].dt_txt)
+                                if (firstWeatherItemHour > 12)
+                                    forecastList += ForecastItem(null, null, listOf(Weather(0, "", "", "")), null, null, null, null, null, null, null, listOfWeathers[0].dt_txt)
+                                if (firstWeatherItemHour > 18)
+                                    forecastList += ForecastItem(null, null, listOf(Weather(0, "", "", "")), null, null, null, null, null, null, null, listOfWeathers[0].dt_txt)
+
+                                for (weatherItem in listOfWeathers)
+                                    if (getItemHour(weatherItem) in usedHours)
+                                        forecastList += weatherItem
+
+                                val forecastSize = forecastList.size % 4
+                                if (forecastList.size % 4 > 0)
+                                    for (i in 1..forecastSize)
+                                        forecastList += ForecastItem(null, null, listOf(Weather(0, "", "", "")), null, null, null, null, null, null, null, "")
+
+                                val finalForecastList = listOf(
+                                    arrayOf(forecastList[0], forecastList[1], forecastList[2], forecastList[3]),
+                                    arrayOf(forecastList[4], forecastList[5], forecastList[6], forecastList[7]),
+                                    arrayOf(forecastList[8], forecastList[9], forecastList[10], forecastList[11]),
+                                    arrayOf(forecastList[12], forecastList[13], forecastList[14], forecastList[15]),
+                                    arrayOf(forecastList[16], forecastList[17], forecastList[18], forecastList[19]),
+                                    arrayOf(forecastList[20], forecastList[21], forecastList[22], forecastList[23])
+                                )
 
                                 val forecastAdapter = ForecastAdapter(
                                     this@MainActivity,
                                     R.layout.forecast_item,
-                                    forecastList
+                                    finalForecastList
                                 )
                                 listView.adapter = forecastAdapter
                             }
@@ -375,7 +381,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getCurrentLL(city: String) : String{
+    private fun getCurrentLL(city: String) : String {
         val builder = GsonBuilder()
         val gson: Gson = builder.create()
         val favoritesMap: MutableMap<String, String> = gson.fromJson(getSavedFavorites(), object : TypeToken<MutableMap<String, String>>() {}.type)
@@ -404,20 +410,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getSavedPressure() = sharedPrefs.getInt(KEY_PRESSURE, 0)
 
-    private fun checkDayForecast(list : List<ForecastItem>) : Int {
-        var counter = 0
-        for (item in list) {
-            if (isNewDayForecast(item.dt_txt)){
-                return counter
-            } else {
-                counter++
-            }
-        }
-        return counter
-    }
-
-    private fun isNewDayForecast(date: String) : Boolean {
-        val time = date.split(" ")[1].split(":")[0].toInt()
-        return time == 6
+    private fun getItemHour(item : ForecastItem) : Int {
+        return item.dt_txt.split(" ")[1].split(":")[0].toInt()
     }
 }

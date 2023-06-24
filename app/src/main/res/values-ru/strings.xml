@@ -13,7 +13,7 @@
     <string name="settings_windDirection_title">Направление ветра</string>
     <string name="settings_pressure_title">Давление</string>
     <string name="windPower_ms">м/с</string>
-    <string name="windPower_milesh">мили/ч</string>
+    <string name="windPower_milesh">миль/ч</string>
     <string name="windDirection_directions">стороны</string>
     <string name="windDirection_degrees">градусы</string>
     <string name="pressure_mmrtst">мм.рт.ст.</string>
@@ -65,4 +65,11 @@
     <string name="settings_theme_dark">Тёмная</string>
     <string name="settings_theme_system">Системная</string>
     <string name="error_no_themes">Изменение тем недоступно на вашем устройстве</string>
+    <string name="mon">пн</string>
+    <string name="tue">вт</string>
+    <string name="wed">ср</string>
+    <string name="thu">чт</string>
+    <string name="fri">пт</string>
+    <string name="sat">сб</string>
+    <string name="sun">вс</string>
 </resources>

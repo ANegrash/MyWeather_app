@@ -10,7 +10,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import nav_com.ru.myweather.models.ForecastItem
-import java.util.*
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 import kotlin.math.roundToInt
 
 class ForecastAdapter (
@@ -30,92 +34,149 @@ class ForecastAdapter (
     ): View {
         val view = inflater.inflate(layout, parent, false)
 
-        val dayObject = jsonObject[position]
+        val morningObject = jsonObject[position][0]
+        val dayObject = jsonObject[position][1]
+        val eveningObject = jsonObject[position][2]
+        val nightObject = jsonObject[position][3]
 
         val morningCard = view.findViewById<CardView>(R.id.morning_card)
         val dayCard = view.findViewById<CardView>(R.id.day_card)
         val eveningCard = view.findViewById<CardView>(R.id.evening_card)
         val nightCard = view.findViewById<CardView>(R.id.night_card)
 
-        val morning_icon = view.findViewById<ImageView>(R.id.morning_icon)
-        val day_icon = view.findViewById<ImageView>(R.id.day_icon)
-        val evening_icon = view.findViewById<ImageView>(R.id.evening_icon)
-        val night_icon = view.findViewById<ImageView>(R.id.night_icon)
+        val morningIcon = view.findViewById<ImageView>(R.id.morning_icon)
+        val dayIcon = view.findViewById<ImageView>(R.id.day_icon)
+        val eveningIcon = view.findViewById<ImageView>(R.id.evening_icon)
+        val nightIcon = view.findViewById<ImageView>(R.id.night_icon)
 
-        val morning_temperature = view.findViewById<TextView>(R.id.temperature_morning)
-        val day_temperature = view.findViewById<TextView>(R.id.temperature_day)
-        val evening_temperature = view.findViewById<TextView>(R.id.temperature_evening)
-        val night_temperature = view.findViewById<TextView>(R.id.temperature_night)
+        val morningTemperature = view.findViewById<TextView>(R.id.temperature_morning)
+        val dayTemperature = view.findViewById<TextView>(R.id.temperature_day)
+        val eveningTemperature = view.findViewById<TextView>(R.id.temperature_evening)
+        val nightTemperature = view.findViewById<TextView>(R.id.temperature_night)
 
-        val morning_wind = view.findViewById<TextView>(R.id.wind_morning)
-        val day_wind = view.findViewById<TextView>(R.id.wind_day)
-        val evening_wind = view.findViewById<TextView>(R.id.wind_evening)
-        val night_wind = view.findViewById<TextView>(R.id.wind_night)
+        val morningWind = view.findViewById<TextView>(R.id.wind_morning)
+        val dayWind = view.findViewById<TextView>(R.id.wind_day)
+        val eveningWind = view.findViewById<TextView>(R.id.wind_evening)
+        val nightWind = view.findViewById<TextView>(R.id.wind_night)
 
-        val date_tw = view.findViewById<TextView>(R.id.date_tw)
+        val dateTw = view.findViewById<TextView>(R.id.date_tw)
+        val dateOw = view.findViewById<TextView>(R.id.date_ow)
 
         val temperSys = getSavedTemperature()
         val windPowerSys = getSavedWindPower()
         val windDirectSys = getSavedWindDirection()
 
-        if (dayObject.size == 1){
+        if (morningObject.wind == null)
+            morningCard.visibility = View.GONE
+        else {
+            morningTemperature.text = getTemperature(morningObject.main!!.temp)
+            morningWind.text = getWindInfo(
+                morningObject.wind!!.speed,
+                morningObject.wind!!.deg,
+                temperSys,
+                windPowerSys,
+                windDirectSys
+            )
+        }
+        val uri: Uri =
+            Uri.parse(
+                "android.resource://nav_com.ru.myweather/drawable/w_" +
+                toDay(morningObject.weather[0].icon.toString())
+            )
+        morningIcon.setImageURI(null)
+        morningIcon.setImageURI(uri)
+
+        if (dayObject.wind == null)
             dayCard.visibility = View.GONE
+        else {
+            dayTemperature.text = getTemperature(dayObject.main!!.temp)
+            dayWind.text = getWindInfo(
+                dayObject.wind!!.speed,
+                dayObject.wind!!.deg,
+                temperSys,
+                windPowerSys,
+                windDirectSys
+            )
+        }
+        val uri1: Uri =
+            Uri.parse(
+                "android.resource://nav_com.ru.myweather/drawable/w_" +
+                toDay(dayObject.weather[0].icon.toString())
+            )
+        dayIcon.setImageURI(null)
+        dayIcon.setImageURI(uri1)
+
+        if (eveningObject.wind == null)
             eveningCard.visibility = View.GONE
+        else {
+            eveningTemperature.text = getTemperature(eveningObject.main!!.temp)
+            eveningWind.text = getWindInfo(
+                eveningObject.wind!!.speed,
+                eveningObject.wind!!.deg,
+                temperSys,
+                windPowerSys,
+                windDirectSys
+            )
+        }
+        val uri2: Uri =
+            Uri.parse(
+                "android.resource://nav_com.ru.myweather/drawable/w_" +
+                toNight(eveningObject.weather[0].icon.toString())
+            )
+        eveningIcon.setImageURI(null)
+        eveningIcon.setImageURI(uri2)
+
+        if (nightObject.wind == null)
             nightCard.visibility = View.GONE
+        else {
+            nightTemperature.text = getTemperature(nightObject.main!!.temp)
+            nightWind.text = getWindInfo(
+                nightObject.wind!!.speed,
+                nightObject.wind!!.deg,
+                temperSys,
+                windPowerSys,
+                windDirectSys
+            )
         }
+        val uri3: Uri =
+            Uri.parse(
+                "android.resource://nav_com.ru.myweather/drawable/w_" +
+                toNight(nightObject.weather[0].icon.toString())
+            )
+        nightIcon.setImageURI(null)
+        nightIcon.setImageURI(uri3)
 
-        if (dayObject.size == 2){
-            eveningCard.visibility = View.GONE
-            nightCard.visibility = View.GONE
+        dateTw.text = getTrueDate(morningObject.dt_txt)
+
+        val dayPart = morningObject.dt_txt.split(" ")[0]
+        val day = dayPart.split("-")[2].toInt()
+        val month = dayPart.split("-")[1].toInt()
+        val c = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
+        val nowMonth = c.get(Calendar.MONTH) + 1
+        val nowDay = c.get(Calendar.DAY_OF_MONTH)
+
+        val isAround = if (nowMonth == month)
+            if (nowDay == day)
+                context.getString(R.string.today)
+            else if (nowDay + 1 == day)
+                context.getString(R.string.tomorrow)
+            else
+                ""
+        else
+            ""
+
+        if (isAround.isNotEmpty()) {
+            dateOw.visibility = View.VISIBLE
+            dateOw.text = isAround
+        } else {
+            dateOw.visibility = View.GONE
+            dateOw.text = ""
         }
-
-        if (dayObject.size == 3){
-            nightCard.visibility = View.GONE
-        }
-
-        if (dayObject.size >= 1) {
-            morning_temperature.text = getTemperature(dayObject[0].main.temp, temperSys)
-            morning_wind.text = getWindInfo(dayObject[0].wind.speed, dayObject[0].wind.deg, temperSys, windPowerSys, windDirectSys)
-            val uri: Uri =
-                Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + toDay(dayObject[0].weather[0].icon.toString()))
-            morning_icon.setImageURI(null)
-            morning_icon.setImageURI(uri)
-        }
-
-        if (dayObject.size >= 2) {
-            day_temperature.text = getTemperature(dayObject[1].main.temp, temperSys)
-            day_wind.text = getWindInfo(dayObject[1].wind.speed, dayObject[1].wind.deg, temperSys, windPowerSys, windDirectSys)
-            val uri1: Uri =
-                Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + toDay(dayObject[1].weather[0].icon.toString()))
-            day_icon.setImageURI(null)
-            day_icon.setImageURI(uri1)
-        }
-
-        if (dayObject.size >= 3) {
-            evening_temperature.text = getTemperature(dayObject[2].main.temp, temperSys)
-            evening_wind.text = getWindInfo(dayObject[2].wind.speed, dayObject[2].wind.deg, temperSys, windPowerSys, windDirectSys)
-            val uri2: Uri =
-                Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + toNight(dayObject[2].weather[0].icon.toString()))
-            evening_icon.setImageURI(null)
-            evening_icon.setImageURI(uri2)
-        }
-
-        if (dayObject.size >= 4) {
-            night_temperature.text = getTemperature(dayObject[3].main.temp, temperSys)
-            night_wind.text = getWindInfo(dayObject[3].wind.speed, dayObject[3].wind.deg, temperSys, windPowerSys, windDirectSys)
-            val uri3: Uri =
-                Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + toNight(dayObject[3].weather[0].icon.toString()))
-            night_icon.setImageURI(null)
-            night_icon.setImageURI(uri3)
-        }
-
-        if (dayObject.isNotEmpty())
-            date_tw.text = getTrueDate(dayObject[0].dt_txt)
 
         return view
     }
 
-    private fun getTemperature(temp: Any, end: Int) : String {
+    private fun getTemperature(temp: Any) : String {
         val intTemp = temp.toString().toFloat().roundToInt()
         return if (intTemp > 0)
             "+$intTemp°"
@@ -128,10 +189,22 @@ class ForecastAdapter (
 
         val dayPart = date.toString().split(" ")[0]
 
-        val day = dayPart.split("-")[2]
-        val month = dayPart.split("-")[1]
+        val day = dayPart.split("-")[2].toInt()
+        val month = dayPart.split("-")[1].toInt()
+        val year = dayPart.split("-")[0].toInt()
 
-        val monthText = when (month.toInt()) {
+        val dayOfWeekText = when (LocalDate.of(year, month, day).dayOfWeek){
+            DayOfWeek.MONDAY -> ", " + context.getString(R.string.mon)
+            DayOfWeek.TUESDAY -> ", " + context.getString(R.string.tue)
+            DayOfWeek.WEDNESDAY -> ", " + context.getString(R.string.wed)
+            DayOfWeek.THURSDAY -> ", " + context.getString(R.string.thu)
+            DayOfWeek.FRIDAY -> ", " + context.getString(R.string.fri)
+            DayOfWeek.SATURDAY -> ", " + context.getString(R.string.sat)
+            DayOfWeek.SUNDAY -> ", " + context.getString(R.string.sun)
+            else -> ""
+        }
+
+        val monthText = when (month) {
             1 -> context.getString(R.string.month_jan)
             2 -> context.getString(R.string.month_feb)
             3 -> context.getString(R.string.month_mar)
@@ -147,24 +220,10 @@ class ForecastAdapter (
             else -> ""
         }
 
-        val c = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
-
-        val nowMonth = c.get(Calendar.MONTH) + 1
-        val nowDay = c.get(Calendar.DAY_OF_MONTH)
-
-        if (nowMonth == month.toInt()) {
-            if (nowDay == day.toInt()){
-                return context.getString(R.string.today)
-            }
-            else if (nowDay + 1 == day.toInt()){
-                return context.getString(R.string.tomorrow)
-            }
-        }
-
         result = if (Locale.getDefault().language == "en")
-            monthText + ", " + day.toInt()
+            "$monthText, $day"
         else
-            "" + day.toInt() + " " + monthText
+            "$day $monthText$dayOfWeekText"
 
         return result
     }
@@ -185,7 +244,7 @@ class ForecastAdapter (
         val deg = degrees.toString().toFloat().roundToInt()
 
         var direction = ""
-        if (directionMode == 0){
+        if (directionMode == 0) {
             when (deg) {
                 in 0..23 -> direction = context.getString(R.string.direction_N)
                 in 24..66 -> direction = context.getString(R.string.direction_N) + context.getString(R.string.direction_E)
@@ -203,11 +262,11 @@ class ForecastAdapter (
         return power + direction
     }
 
-    private fun toDay(src: String) : String{
+    private fun toDay(src: String) : String {
         return src.dropLast(1) + "d"
     }
 
-    private fun toNight(src: String) : String{
+    private fun toNight(src: String) : String {
         return src.dropLast(1) + "n"
     }
 
