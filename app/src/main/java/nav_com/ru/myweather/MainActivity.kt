@@ -250,14 +250,14 @@ class MainActivity : AppCompatActivity() {
                                     for (i in 1..forecastSize)
                                         forecastList += ForecastItem(null, null, listOf(Weather(0, "", "", "")), null, null, null, null, null, null, null, "")
 
-                                val finalForecastList = listOf(
-                                    arrayOf(forecastList[0], forecastList[1], forecastList[2], forecastList[3]),
-                                    arrayOf(forecastList[4], forecastList[5], forecastList[6], forecastList[7]),
-                                    arrayOf(forecastList[8], forecastList[9], forecastList[10], forecastList[11]),
-                                    arrayOf(forecastList[12], forecastList[13], forecastList[14], forecastList[15]),
-                                    arrayOf(forecastList[16], forecastList[17], forecastList[18], forecastList[19]),
-                                    arrayOf(forecastList[20], forecastList[21], forecastList[22], forecastList[23])
-                                )
+                                val finalForecastList = mutableListOf<Array<ForecastItem>>()
+
+                                val counter = (forecastList.size / 4) - 1
+                                for (i in 0..counter) {
+                                    finalForecastList += arrayOf(
+                                        forecastList[i * 4], forecastList[i * 4 + 1],forecastList[i * 4 + 2],forecastList[i * 4 + 3]
+                                    )
+                                }
 
                                 val forecastAdapter = ForecastAdapter(
                                     this@MainActivity,

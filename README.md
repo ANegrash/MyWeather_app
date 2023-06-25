@@ -7,6 +7,7 @@
 **Разработчик:** NAV apps (*Неграш Андрей*) [<img src='https://cdn.jsdelivr.net/npm/simple-icons@3.0.1/icons/telegram.svg' alt='telegram' height='20'>](https://t.me/a_negrash) [<img src='https://cdn.jsdelivr.net/npm/simple-icons@3.0.1/icons/vk.svg' alt='vk' height='20'>](https://vk.com/a_negrash)  
 
 ## История версий
+- **1.2(3) Not invented** от 25.06.2023
 - **1.2(2) From Russia with Love** от 31.03.2023
 - **1.2(1) Come to Dark Side** от 02.03.2023
 - **1.2(0) Hello, World!** от 22.02.2023
