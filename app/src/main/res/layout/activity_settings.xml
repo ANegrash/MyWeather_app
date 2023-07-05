@@ -254,7 +254,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout6"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:background="@color/dark"
@@ -269,12 +269,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintTop_toBottomOf="@+id/chipGroup">
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -431,6 +427,139 @@
                     android:text="@string/settings_theme_system"
                     android:textColor="@color/dark" />
             </RadioGroup>
+
+            <TextView
+                android:id="@+id/textView28"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/open_sans"
+                android:text="@string/settings_parameters"
+                android:textColor="@color/dark"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView28">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_settings_wind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:fontFamily="@font/open_sans"
+                    android:text="@string/settings_wind_chip"
+                    android:textColor="@color/dark"
+                    app:checkedIcon="@drawable/check_mark"
+                    app:chipIcon="@drawable/wind_2" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_settings_pressure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:fontFamily="@font/open_sans"
+                    android:text="@string/settings_pressure_title"
+                    android:textColor="@color/dark"
+                    app:checkedIcon="@drawable/check_mark"
+                    app:chipIcon="@drawable/pressure" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_settings_humidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:fontFamily="@font/open_sans"
+                    android:text="@string/humidity"
+                    android:textColor="@color/dark"
+                    app:checkedIcon="@drawable/check_mark"
+                    app:chipIcon="@drawable/humidity" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_settings_temperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:fontFamily="@font/open_sans"
+                    android:text="@string/toast_feels"
+                    android:textColor="@color/dark"
+                    app:checkedIcon="@drawable/check_mark"
+                    app:chipIcon="@drawable/feeling" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_settings_cloudiness"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:fontFamily="@font/open_sans"
+                    android:text="@string/toast_cloudiness"
+                    android:textColor="@color/dark"
+                    app:checkedIcon="@drawable/check_mark"
+                    app:chipIcon="@drawable/w_04d" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_settings_sunrise"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:fontFamily="@font/open_sans"
+                    android:text="@string/toast_sunrise"
+                    android:textColor="@color/dark"
+                    app:checkedIcon="@drawable/check_mark"
+                    app:chipIcon="@drawable/sunrise" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_settings_sunset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:fontFamily="@font/open_sans"
+                    android:text="@string/toast_sunset"
+                    android:textColor="@color/dark"
+                    app:checkedIcon="@drawable/check_mark"
+                    app:chipIcon="@drawable/sunset" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_settings_visibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:fontFamily="@font/open_sans"
+                    android:text="@string/toast_visibility"
+                    android:textColor="@color/dark"
+                    app:checkedIcon="@drawable/check_mark"
+                    app:chipIcon="@drawable/visibility" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <ImageButton
+                android:id="@+id/help"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="@+id/textView28"
+                app:layout_constraintStart_toEndOf="@+id/textView28"
+                app:layout_constraintTop_toTopOf="@+id/textView28"
+                app:srcCompat="@drawable/ic_help" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

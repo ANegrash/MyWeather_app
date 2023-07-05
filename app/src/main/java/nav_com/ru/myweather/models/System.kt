@@ -4,6 +4,6 @@ data class System (
     var type: Any,
     var id: Any,
     var country: Any,
-    var sunrise: Any,
-    var sunset: Any
+    var sunrise: Long,
+    var sunset: Long
     )

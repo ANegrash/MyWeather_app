@@ -12,9 +12,11 @@ import android.widget.ImageButton
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.chip.Chip
 
 class Settings : AppCompatActivity() {
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
@@ -46,7 +48,7 @@ class Settings : AppCompatActivity() {
         switchWindDirection.isChecked = getSavedWindDirection() != 0
         switchPress.isChecked = getSavedPressure() != 0
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             when (getSavedTheme()){
                 0 -> radioSystem.isChecked = true
                 1 -> radioLight.isChecked = true
@@ -82,6 +84,73 @@ class Settings : AppCompatActivity() {
             savePressure(if (isChecked) 1 else 0)
         }
 
+        var savedChips = getSavedChips().orEmpty()
+        if (savedChips.isEmpty()) {
+            savedChips = "11110000"
+            saveChips(savedChips)
+        }
+
+        val wind = findViewById<Chip>(R.id.chip_settings_wind)
+        val pressure = findViewById<Chip>(R.id.chip_settings_pressure)
+        val humidity = findViewById<Chip>(R.id.chip_settings_humidity)
+        val feels = findViewById<Chip>(R.id.chip_settings_temperature)
+        val cloudiness = findViewById<Chip>(R.id.chip_settings_cloudiness)
+        val sunrise = findViewById<Chip>(R.id.chip_settings_sunrise)
+        val sunset = findViewById<Chip>(R.id.chip_settings_sunset)
+        val visibility = findViewById<Chip>(R.id.chip_settings_visibility)
+        val helpBtn = findViewById<ImageButton>(R.id.help)
+
+        wind.isChecked = checkChip(savedChips, 0)
+        pressure.isChecked = checkChip(savedChips, 1)
+        humidity.isChecked = checkChip(savedChips, 2)
+        feels.isChecked = checkChip(savedChips, 3)
+        cloudiness.isChecked = checkChip(savedChips, 4)
+        sunrise.isChecked = checkChip(savedChips, 5)
+        sunset.isChecked = checkChip(savedChips, 6)
+        visibility.isChecked = checkChip(savedChips, 7)
+
+        wind.setOnClickListener {
+            saveChips(replaceChip(getSavedChips().toString(), 0))
+        }
+
+        pressure.setOnClickListener {
+            saveChips(replaceChip(getSavedChips().toString(), 1))
+        }
+
+        humidity.setOnClickListener {
+            saveChips(replaceChip(getSavedChips().toString(), 2))
+        }
+
+        feels.setOnClickListener {
+            saveChips(replaceChip(getSavedChips().toString(), 3))
+        }
+
+        cloudiness.setOnClickListener {
+            saveChips(replaceChip(getSavedChips().toString(), 4))
+        }
+
+        sunrise.setOnClickListener {
+            saveChips(replaceChip(getSavedChips().toString(), 5))
+        }
+
+        sunset.setOnClickListener {
+            saveChips(replaceChip(getSavedChips().toString(), 6))
+        }
+
+        visibility.setOnClickListener {
+            saveChips(replaceChip(getSavedChips().toString(), 7))
+        }
+
+        helpBtn.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.attention))
+                .setMessage(getString(R.string.disclaimer_parameters))
+                .setPositiveButton("OK") {
+                    d, _ -> d.cancel()
+                }
+                .show()
+        }
+
         rate.setOnClickListener {
             val uri: Uri = Uri.parse("market://details?id=$packageName")
             val goToMarket = Intent(Intent.ACTION_VIEW, uri)
@@ -107,7 +176,22 @@ class Settings : AppCompatActivity() {
         }
     }
 
-    private fun saveTheme(theme: Int) = sharedPrefs.edit().putInt(KEY_THEME, theme).apply()
+    private fun checkChip (chips: String, find: Int) : Boolean {
+        return chips[find] == '1'
+    }
+
+    private fun replaceChip (chips: String, find: Int) : String {
+        var result = ""
+        for (counter in 0..7) {
+            result += if (counter == find)
+                if (chips[find] == '1') "0" else "1"
+            else
+                chips[counter]
+        }
+        return result
+    }
+
+    private fun saveTheme (theme: Int) = sharedPrefs.edit().putInt(KEY_THEME, theme).apply()
 
     private fun getSavedTheme() = sharedPrefs.getInt(KEY_THEME, 0)
 
@@ -127,8 +211,12 @@ class Settings : AppCompatActivity() {
 
     private fun getSavedPressure() = sharedPrefs.getInt(KEY_PRESSURE, 0)
 
-    private fun setTheme(themeMode: Int, prefsMode: Int) {
+    private fun setTheme (themeMode: Int, prefsMode: Int) {
         AppCompatDelegate.setDefaultNightMode(themeMode)
         saveTheme(prefsMode)
     }
+
+    private fun saveChips (chips: String) = sharedPrefs.edit().putString(KEY_CHIPS, chips).apply()
+
+    private fun getSavedChips() = sharedPrefs.getString(KEY_CHIPS, "")
 }

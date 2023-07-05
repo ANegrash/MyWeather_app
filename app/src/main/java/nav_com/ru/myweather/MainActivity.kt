@@ -25,6 +25,7 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
+import java.time.ZoneOffset
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -36,6 +37,7 @@ const val KEY_WIND_DIRECTION = "prefs.wind_direction"
 const val KEY_PRESSURE = "prefs.pressure"
 const val KEY_FAVORITE_LIST = "prefs.favorite_list"
 const val KEY_CURRENT_CITY = "prefs.current_city"
+const val KEY_CHIPS = "prefs.chips"
 const val KEY_THEME = "prefs.theme"
 class MainActivity : AppCompatActivity() {
 
@@ -166,11 +168,38 @@ class MainActivity : AppCompatActivity() {
                         val weatherObject: WeatherResponse = gson.fromJson(stringResponse, WeatherResponse::class.java)
 
                         if (weatherObject.cod == 200) {
+
+                            var savedChips = getSavedChips().orEmpty()
+                            if (savedChips.isEmpty()) {
+                                savedChips = "11110000"
+                                saveChips(savedChips)
+                            }
+
                             val currentTemperature = findViewById<TextView>(R.id.current_temperature)
-                            val feels = findViewById<Chip>(R.id.feeling_chip)
                             val wind = findViewById<Chip>(R.id.wind_chip)
                             val pressure = findViewById<Chip>(R.id.press_chip)
                             val humidity = findViewById<Chip>(R.id.humidity_chip)
+                            val feels = findViewById<Chip>(R.id.feeling_chip)
+                            val cloudiness = findViewById<Chip>(R.id.cloudiness_chip)
+                            val sunrise = findViewById<Chip>(R.id.sunrise_chip)
+                            val sunset = findViewById<Chip>(R.id.sunset_chip)
+                            val visibility = findViewById<Chip>(R.id.visibility_chip)
+                            val currentWeather = findViewById<ConstraintLayout>(R.id.constraintLayout2)
+
+                            wind.visibility = if (checkChip(savedChips, 0)) View.VISIBLE else View.GONE
+                            pressure.visibility = if (checkChip(savedChips, 1)) View.VISIBLE else View.GONE
+                            humidity.visibility = if (checkChip(savedChips, 2)) View.VISIBLE else View.GONE
+                            feels.visibility = if (checkChip(savedChips, 3)) View.VISIBLE else View.GONE
+                            cloudiness.visibility = if (checkChip(savedChips, 4)) View.VISIBLE else View.GONE
+                            sunrise.visibility = if (checkChip(savedChips, 5)) View.VISIBLE else View.GONE
+                            sunset.visibility = if (checkChip(savedChips, 6)) View.VISIBLE else View.GONE
+                            visibility.visibility = if (checkChip(savedChips, 7)) View.VISIBLE else View.GONE
+
+                            if (savedChips == "00000000")
+                                currentWeather.visibility = View.GONE
+                            else
+                                currentWeather.visibility = View.VISIBLE
+
                             val weatherIcon = findViewById<ImageView>(R.id.weather_icon)
 
                             runOnUiThread {
@@ -178,7 +207,13 @@ class MainActivity : AppCompatActivity() {
                                 feels.text = getTemperature(weatherObject.main.feels_like)
                                 wind.text = getWindInfo(weatherObject.wind.speed, weatherObject.wind.deg)
                                 pressure.text = getPressure(weatherObject.main.pressure)
-                                humidity.text = "" + weatherObject.main.humidity.toString().toFloat().roundToInt() + "%"
+                                val humidityText = weatherObject.main.humidity.toString().toFloat().roundToInt().toString() + "%"
+                                humidity.text = humidityText
+                                val cloudinessText = weatherObject.clouds.all.toInt().toString() + "%"
+                                cloudiness.text = cloudinessText
+                                visibility.text = getVisibility(weatherObject.visibility)
+                                sunrise.text = getSunTime(weatherObject.sys.sunrise, weatherObject.timezone)
+                                sunset.text = getSunTime(weatherObject.sys.sunset, weatherObject.timezone)
                                 val uri: Uri = Uri.parse("android.resource://nav_com.ru.myweather/drawable/w_" + weatherObject.weather[0].icon )
                                 weatherIcon.setImageURI(null)
                                 weatherIcon.setImageURI(uri)
@@ -199,6 +234,18 @@ class MainActivity : AppCompatActivity() {
                                 }
                                 feels.setOnClickListener {
                                     Toast.makeText(this@MainActivity, getString(R.string.toast_feels), Toast.LENGTH_SHORT).show()
+                                }
+                                cloudiness.setOnClickListener {
+                                    Toast.makeText(this@MainActivity, getString(R.string.toast_cloudiness), Toast.LENGTH_SHORT).show()
+                                }
+                                visibility.setOnClickListener {
+                                    Toast.makeText(this@MainActivity, getString(R.string.toast_visibility), Toast.LENGTH_SHORT).show()
+                                }
+                                sunrise.setOnClickListener {
+                                    Toast.makeText(this@MainActivity, getString(R.string.toast_sunrise), Toast.LENGTH_SHORT).show()
+                                }
+                                sunset.setOnClickListener {
+                                    Toast.makeText(this@MainActivity, getString(R.string.toast_sunset), Toast.LENGTH_SHORT).show()
                                 }
                             }
                         } else {
@@ -277,6 +324,10 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    private fun checkChip(chips: String, find: Int) : Boolean {
+        return chips[find] == '1'
+    }
+
     private fun getTemperature(temp: Any) : String {
         val intTemp = temp.toString().toFloat().roundToInt()
         return if (intTemp > 0)
@@ -325,6 +376,26 @@ class MainActivity : AppCompatActivity() {
             direction = "$deg°"
 
         return power + direction
+    }
+
+    private fun getVisibility (distance: Float) : String {
+        val km = distance.toInt() / 1000
+        val meters = ((distance - km * 1000) / 100).roundToInt()
+        return if (km > 0)
+            if (meters > 0)
+                "$km,$meters км"
+            else
+                "$km км"
+        else
+            "" + (distance - km * 1000).toInt() + " м"
+    }
+
+    private fun getSunTime (unix : Long, zone : Int) : String {
+        val instant = java.time.Instant.ofEpochSecond(unix)
+        val offset = ZoneOffset.ofTotalSeconds(zone)
+        val withOffset = instant.atOffset(offset)
+        val sunTimeArray = java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(withOffset).toString().split("T")[1].split(":")
+        return sunTimeArray[0] + ":" + sunTimeArray[1]
     }
 
     private fun setVisibleContent (
@@ -410,7 +481,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun getSavedPressure() = sharedPrefs.getInt(KEY_PRESSURE, 0)
 
-    private fun getItemHour(item : ForecastItem) : Int {
-        return item.dt_txt.split(" ")[1].split(":")[0].toInt()
-    }
+    private fun getItemHour (item : ForecastItem) = item.dt_txt.split(" ")[1].split(":")[0].toInt()
+
+    private fun saveChips (chips: String) = sharedPrefs.edit().putString(KEY_CHIPS, chips).apply()
+
+    private fun getSavedChips() = sharedPrefs.getString(KEY_CHIPS, "")
 }

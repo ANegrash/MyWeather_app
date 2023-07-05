@@ -72,4 +72,12 @@
     <string name="fri">FRI</string>
     <string name="sat">SAT</string>
     <string name="sun">SUN</string>
+    <string name="toast_visibility">Visibility</string>
+    <string name="toast_sunrise">Sunrise</string>
+    <string name="toast_sunset">Sunset</string>
+    <string name="toast_cloudiness">Cloudiness</string>
+    <string name="settings_parameters">Displayed parameters</string>
+    <string name="settings_wind_chip">Wind</string>
+    <string name="disclaimer_parameters">The visibility, sunrise and sunset is in testing mode now. So it can displayed wrongly in some locations</string>
+    <string name="attention">Attention</string>
 </resources>

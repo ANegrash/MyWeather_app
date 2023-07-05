@@ -72,4 +72,12 @@
     <string name="fri">пт</string>
     <string name="sat">сб</string>
     <string name="sun">вс</string>
+    <string name="toast_visibility">Видимость</string>
+    <string name="toast_sunrise">Рассвет</string>
+    <string name="toast_sunset">Закат</string>
+    <string name="toast_cloudiness">Облачность</string>
+    <string name="settings_parameters">Отображаемые параметры</string>
+    <string name="settings_wind_chip">Ветер</string>
+    <string name="disclaimer_parameters">Видимость и время рассвета и заката пока что тестируется и может неверно отображаться</string>
+    <string name="attention">Внимание</string>
 </resources>

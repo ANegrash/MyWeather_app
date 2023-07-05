@@ -173,7 +173,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/constraintLayout3"
+                        android:id="@+id/justCurrent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -215,19 +215,19 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/constraintLayout2"
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="16dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/constraintLayout3"
+                        app:layout_constraintStart_toEndOf="@+id/justCurrent"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <com.google.android.material.chip.ChipGroup
                             android:layout_width="wrap_content"
-                            android:layout_height="0dp"
+                            android:layout_height="wrap_content"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.555"
@@ -289,6 +289,66 @@
                                 android:textSize="16sp"
                                 app:chipBackgroundColor="#35000000"
                                 app:chipIcon="@drawable/feeling"
+                                app:chipIconEnabled="true"
+                                app:chipIconSize="26dp"
+                                app:chipIconVisible="true"
+                                app:chipStrokeColor="@color/dark_mv"
+                                app:chipSurfaceColor="#00000000" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/cloudiness_chip"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/open_sans"
+                                android:textColor="@color/smoky_sky_mv"
+                                android:textSize="16sp"
+                                app:chipBackgroundColor="#35000000"
+                                app:chipIcon="@drawable/w_04d"
+                                app:chipIconEnabled="true"
+                                app:chipIconSize="26dp"
+                                app:chipIconVisible="true"
+                                app:chipStrokeColor="@color/dark_mv"
+                                app:chipSurfaceColor="#00000000" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/sunrise_chip"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/open_sans"
+                                android:textColor="@color/smoky_sky_mv"
+                                android:textSize="16sp"
+                                app:chipBackgroundColor="#35000000"
+                                app:chipIcon="@drawable/sunrise"
+                                app:chipIconEnabled="true"
+                                app:chipIconSize="26dp"
+                                app:chipIconVisible="true"
+                                app:chipStrokeColor="@color/dark_mv"
+                                app:chipSurfaceColor="#00000000" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/sunset_chip"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/open_sans"
+                                android:textColor="@color/smoky_sky_mv"
+                                android:textSize="16sp"
+                                app:chipBackgroundColor="#35000000"
+                                app:chipIcon="@drawable/sunset"
+                                app:chipIconEnabled="true"
+                                app:chipIconSize="26dp"
+                                app:chipIconVisible="true"
+                                app:chipStrokeColor="@color/dark_mv"
+                                app:chipSurfaceColor="#00000000" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/visibility_chip"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/open_sans"
+                                android:textColor="@color/smoky_sky_mv"
+                                android:textSize="16sp"
+                                app:chipBackgroundColor="#35000000"
+                                app:chipIcon="@drawable/visibility"
                                 app:chipIconEnabled="true"
                                 app:chipIconSize="26dp"
                                 app:chipIconVisible="true"
