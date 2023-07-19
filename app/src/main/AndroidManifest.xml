@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyWeather">
         <activity
+            android:name="com.my.target.common.MyTargetActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        <activity
             android:name=".SearchCityActivity"
             android:exported="false" />
         <activity
@@ -29,7 +32,8 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainActivity"            android:exported="true"
+            android:name=".MainActivity"
+            android:exported="true"
             android:theme="@style/SplashActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

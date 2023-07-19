@@ -17,6 +17,10 @@ import com.google.android.material.chip.Chip
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.my.target.ads.MyTargetView
+import com.my.target.ads.MyTargetView.MyTargetViewListener
+import com.my.target.common.MyTargetConfig
+import com.my.target.common.MyTargetManager
 import nav_com.ru.myweather.models.ForecastItem
 import nav_com.ru.myweather.models.ForecastResponse
 import nav_com.ru.myweather.models.Weather
@@ -29,6 +33,8 @@ import java.time.ZoneOffset
 import java.util.*
 import kotlin.math.roundToInt
 
+const val SLOT_ID = 1333756
+const val IS_TEST = false
 const val PREFS_NAME = "myWeather_prefs"
 const val KEY_POSITION = "prefs.position"
 const val KEY_TEMPERATURE = "prefs.temp"
@@ -46,6 +52,8 @@ class MainActivity : AppCompatActivity() {
     private var position : Int = 0
 
     private val usedHours: Array<Int> = arrayOf(6, 12, 18, 21)
+
+    private lateinit var adView: MyTargetView
 
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
 
@@ -80,6 +88,11 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         setAll()
         super.onResume()
+    }
+
+    override fun onDestroy() {
+        adView.destroy()
+        super.onDestroy()
     }
 
     private fun setAll() {
@@ -126,6 +139,27 @@ class MainActivity : AppCompatActivity() {
         val citySelector = findViewById<Button>(R.id.citySelection)
         citySelector.text = currentCity
         setVisibleContent(0, 1, 0)
+
+        val cl = findViewById<ConstraintLayout>(R.id.constraintLayoutBanner)
+
+        val myTargetConfig = MyTargetConfig.Builder()
+            //.withTestDevices("5e52c264-be03-444f-8f37-d828c0c53279")
+            .build()
+        MyTargetManager.setSdkConfig(myTargetConfig)
+
+        MyTargetManager.setDebugMode(IS_TEST)
+        adView = MyTargetView(this)
+        adView.setSlotId(SLOT_ID)
+
+        adView.listener = object : MyTargetViewListener {
+            override fun onLoad(myTargetView: MyTargetView) {
+                cl.addView(adView)
+            }
+            override fun onNoAd(reason: String, myTargetView: MyTargetView) {}
+            override fun onShow(myTargetView: MyTargetView) {}
+            override fun onClick(myTargetView: MyTargetView) {}
+        }
+        adView.load()
 
         val ll = getCurrentLL(currentCity)
 
