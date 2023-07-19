@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity() {
         val cl = findViewById<ConstraintLayout>(R.id.constraintLayoutBanner)
 
         val myTargetConfig = MyTargetConfig.Builder()
-            //.withTestDevices("5e52c264-be03-444f-8f37-d828c0c53279")
+            .withTestDevices("5e52c264-be03-444f-8f37-d828c0c53279")
             .build()
         MyTargetManager.setSdkConfig(myTargetConfig)
 
