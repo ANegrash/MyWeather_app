@@ -17,10 +17,6 @@ import com.google.android.material.chip.Chip
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.my.target.ads.MyTargetView
-import com.my.target.ads.MyTargetView.MyTargetViewListener
-import com.my.target.common.MyTargetConfig
-import com.my.target.common.MyTargetManager
 import nav_com.ru.myweather.models.ForecastItem
 import nav_com.ru.myweather.models.ForecastResponse
 import nav_com.ru.myweather.models.Weather
@@ -33,10 +29,7 @@ import java.time.ZoneOffset
 import java.util.*
 import kotlin.math.roundToInt
 
-const val SLOT_ID = 1333756
-const val IS_TEST = false
 const val PREFS_NAME = "myWeather_prefs"
-const val KEY_POSITION = "prefs.position"
 const val KEY_TEMPERATURE = "prefs.temp"
 const val KEY_WIND_POWER = "prefs.wind_power"
 const val KEY_WIND_DIRECTION = "prefs.wind_direction"
@@ -46,14 +39,7 @@ const val KEY_CURRENT_CITY = "prefs.current_city"
 const val KEY_CHIPS = "prefs.chips"
 const val KEY_THEME = "prefs.theme"
 class MainActivity : AppCompatActivity() {
-
-    private val listOfCities = arrayOf("Адлер", "Алушта", "Джанкой", "Евпатория", "Елец", "Керчь", "Москва", "Нижневартовск", "Саки", "Санкт-Петербург", "Севастополь",  "Симферополь", "Сочи", "Феодосия", "Чайковский", "Ялта")
-    private val listOfCitylls = arrayOf("43.4253834, 39.9237036", "44.677112, 34.4095393", "45.7093755, 34.3899131", "45.1907635, 33.3679049", "52.6219865, 38.5003298", "45.3534002, 36.4538645", "55.750446, 37.617493", "60.9339411, 76.5814274", "45.1319466, 33.6001281", "59.938732, 30.316229", "44.6054434, 33.5220842",  "44.9521459, 34.1024858", "43.5854823, 39.723109", "45.033669, 35.3753628", "56.7787468, 54.1500704", "44.49707, 34.158688")
-    private var position : Int = 0
-
     private val usedHours: Array<Int> = arrayOf(6, 12, 18, 21)
-
-    private lateinit var adView: MyTargetView
 
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
 
@@ -72,13 +58,6 @@ class MainActivity : AppCompatActivity() {
                 2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
         }
-
-        position = getSavedPosition()
-        if (position > -1){
-            saveCurrentCity(listOfCities[position])
-            saveFavorites("{\"" + listOfCities[position] + "\":\"" + listOfCitylls[position] + "\"}")
-            savePosition(-1)
-        }
     }
 
     override fun onBackPressed() {
@@ -88,11 +67,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         setAll()
         super.onResume()
-    }
-
-    override fun onDestroy() {
-        adView.destroy()
-        super.onDestroy()
     }
 
     private fun setAll() {
@@ -139,27 +113,6 @@ class MainActivity : AppCompatActivity() {
         val citySelector = findViewById<Button>(R.id.citySelection)
         citySelector.text = currentCity
         setVisibleContent(0, 1, 0)
-
-        val cl = findViewById<ConstraintLayout>(R.id.constraintLayoutBanner)
-
-        val myTargetConfig = MyTargetConfig.Builder()
-            .withTestDevices("5e52c264-be03-444f-8f37-d828c0c53279")
-            .build()
-        MyTargetManager.setSdkConfig(myTargetConfig)
-
-        MyTargetManager.setDebugMode(IS_TEST)
-        adView = MyTargetView(this)
-        adView.setSlotId(SLOT_ID)
-
-        adView.listener = object : MyTargetViewListener {
-            override fun onLoad(myTargetView: MyTargetView) {
-                cl.addView(adView)
-            }
-            override fun onNoAd(reason: String, myTargetView: MyTargetView) {}
-            override fun onShow(myTargetView: MyTargetView) {}
-            override fun onClick(myTargetView: MyTargetView) {}
-        }
-        adView.load()
 
         val ll = getCurrentLL(currentCity)
 
@@ -417,11 +370,11 @@ class MainActivity : AppCompatActivity() {
         val meters = ((distance - km * 1000) / 100).roundToInt()
         return if (km > 0)
             if (meters > 0)
-                "$km,$meters км"
+                "$km,$meters " + getString(R.string.km)
             else
-                "$km км"
+                "$km " + getString(R.string.km)
         else
-            "" + (distance - km * 1000).toInt() + " м"
+            "" + (distance - km * 1000).toInt() + " " + getString(R.string.m)
     }
 
     private fun getSunTime (unix : Long, zone : Int) : String {
@@ -493,19 +446,11 @@ class MainActivity : AppCompatActivity() {
         return "lat=" + favoritesMap[city].toString().split(", ")[0] + "&lon=" + favoritesMap[city].toString().split(", ")[1]
     }
 
-    private fun saveFavorites(fav: String) = sharedPrefs.edit().putString(KEY_FAVORITE_LIST, fav).apply()
-
     private fun getSavedFavorites() = sharedPrefs.getString(KEY_FAVORITE_LIST, "{}")
 
     private fun getSavedTheme() = sharedPrefs.getInt(KEY_THEME, 0)
 
-    private fun saveCurrentCity (city: String) = sharedPrefs.edit().putString(KEY_CURRENT_CITY, city).apply()
-
     private fun getCurrentCity() = sharedPrefs.getString(KEY_CURRENT_CITY, "")
-
-    private fun savePosition (position: Int) = sharedPrefs.edit().putInt(KEY_POSITION, position).apply()
-
-    private fun getSavedPosition() = sharedPrefs.getInt(KEY_POSITION, -2)
 
     private fun getSavedTemperature() = sharedPrefs.getInt(KEY_TEMPERATURE, 0)
 

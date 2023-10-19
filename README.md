@@ -7,6 +7,7 @@
 **Разработчик:** NAV apps (*Неграш Андрей*) [<img src='https://cdn.jsdelivr.net/npm/simple-icons@3.0.1/icons/telegram.svg' alt='telegram' height='20'>](https://t.me/a_negrash) [<img src='https://cdn.jsdelivr.net/npm/simple-icons@3.0.1/icons/vk.svg' alt='vk' height='20'>](https://vk.com/a_negrash)  
 
 ## История версий
+- **1.2(6) Wrong turn** от 20.10.2023
 - **1.2(5) Red cat** от 19.07.2023
 - **1.2(4) Beautiful penguin** от 09.07.2023
 - **1.2(3) Not invented** от 25.06.2023

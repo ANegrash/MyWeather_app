@@ -10,8 +10,8 @@ android {
         applicationId "nav_com.ru.myweather"
         minSdk 26
         targetSdk 33
-        versionCode 12
-        versionName "1.2(5) Red cat"
+        versionCode 13
+        versionName "1.2(6) Wrong Turn"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

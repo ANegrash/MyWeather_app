@@ -80,4 +80,6 @@
     <string name="settings_wind_chip">Ветер</string>
     <string name="disclaimer_parameters">Видимость и время рассвета и заката пока что тестируется и может неверно отображаться</string>
     <string name="attention">Внимание</string>
+    <string name="km">км</string>
+    <string name="m">м</string>
 </resources>

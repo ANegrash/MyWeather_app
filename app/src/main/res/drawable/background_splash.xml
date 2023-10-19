@@ -4,17 +4,10 @@
     <item
         android:drawable="@color/smoky_sky_mv"/>
 
-    <item android:bottom="100dp">
+    <item android:bottom="0dp">
         <bitmap
             android:gravity="center"
             android:src="@mipmap/ic_launcher_foreground"/>
-    </item>
-
-    <item android:top="350dp">
-        <bitmap
-            android:width="100dp"
-            android:gravity="center"
-            android:src="@mipmap/made_in_russia"/>
     </item>
 
 </layer-list>

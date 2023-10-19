@@ -80,4 +80,6 @@
     <string name="settings_wind_chip">Wind</string>
     <string name="disclaimer_parameters">The visibility, sunrise and sunset is in testing mode now. So it can displayed wrongly in some locations</string>
     <string name="attention">Attention</string>
+    <string name="km">km</string>
+    <string name="m">m</string>
 </resources>
