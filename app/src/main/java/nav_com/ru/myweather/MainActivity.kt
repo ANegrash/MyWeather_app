@@ -1,5 +1,7 @@
 package nav_com.ru.myweather
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.AnimationDrawable
@@ -113,6 +115,10 @@ class MainActivity : AppCompatActivity() {
         val citySelector = findViewById<Button>(R.id.citySelection)
         citySelector.text = currentCity
         setVisibleContent(0, 1, 0)
+
+        NewAppWidget().onUpdate(this, AppWidgetManager.getInstance(this), AppWidgetManager.getInstance(this).getAppWidgetIds(
+            ComponentName(this, NewAppWidget::class.java)
+        ))
 
         val ll = getCurrentLL(currentCity)
 

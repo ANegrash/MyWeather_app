@@ -82,4 +82,7 @@
     <string name="attention">Attention</string>
     <string name="km">km</string>
     <string name="m">m</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">Current weather only</string>
+    <string name="loading">Loading...</string>
 </resources>

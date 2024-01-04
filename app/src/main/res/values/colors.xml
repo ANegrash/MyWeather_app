@@ -14,4 +14,5 @@
     <color name="light_green">#66ff66</color>
     <color name="smoky_sky_mv">#F5F5F5</color>
     <color name="dark_mv">#151719</color>
+    <color name="transparent">#00000000</color>
 </resources>

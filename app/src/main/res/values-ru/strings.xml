@@ -82,4 +82,7 @@
     <string name="attention">Внимание</string>
     <string name="km">км</string>
     <string name="m">м</string>
+    <string name="add_widget">Добавить виджет</string>
+    <string name="app_widget_description">Только текущая погода</string>
+    <string name="loading">Загрузка...</string>
 </resources>
