@@ -3,9 +3,12 @@ package nav_com.ru.myweather
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -17,6 +20,7 @@ import okhttp3.Response
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import kotlin.math.roundToInt
 
 /**
@@ -31,6 +35,23 @@ class NewAppWidget : AppWidgetProvider() {
         // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
+        }
+    }
+
+    private fun onUpdate(context: Context) {
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val thisAppWidgetComponentName = ComponentName(context.packageName, javaClass.name)
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidgetComponentName)
+        onUpdate(context, appWidgetManager, appWidgetIds)
+    }
+
+    override fun onReceive(context: Context?, intent: Intent?) {
+        super.onReceive(context, intent)
+
+        Log.e("TAG_suka", "We are in onReceive()")
+        if (context != null) {
+            onUpdate(context)
+            Log.e("TAG_suka", "We are in the end of fucking onReceive()")
         }
     }
 
@@ -50,12 +71,13 @@ internal fun updateAppWidget(
 ) {
     val views = RemoteViews(context.packageName, R.layout.new_app_widget)
 
-    val uri: Uri = Uri.parse("android.resource://nav_com.ru.myweather/drawable/shot5")
-    views.setImageViewUri(R.id.widget_1_icon, uri)
-    views.setTextViewText(R.id.widget_1_text, "+?°")
-    views.setTextViewText(R.id.widget_1_time, context.getString(R.string.loading))
+    Log.e("TAG_suka", "Start the loading activity")
+    views.setViewVisibility(R.id.widget_1_content, View.GONE)
+    views.setViewVisibility(R.id.widget_1_loading, View.VISIBLE)
+    views.setViewVisibility(R.id.widget_1_error, View.GONE)
     appWidgetManager.updateAppWidget(appWidgetId, views)
 
+    Log.e("TAG_suka", "Do something of prefs")
     val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     val city = prefs.getString(KEY_CURRENT_CITY, "").toString()
@@ -78,19 +100,34 @@ internal fun updateAppWidget(
                 "&appid=ddd069d11b1e504d8268d4ee774ddd64" +
                 "&units=" + units
 
+    Log.e("TAG_suka", "Let's do request")
     val request = Request()
 
     request.run(
         requestUrl,
         object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                val uri: Uri = Uri.parse("android.resource://nav_com.ru.myweather/drawable/no_wifi")
-                views.setImageViewUri(R.id.widget_1_icon, uri)
-                views.setTextViewText(R.id.widget_1_text, "...")
-                val sdf = SimpleDateFormat("hh:mm")
+                views.setViewVisibility(R.id.widget_1_content, View.GONE)
+                views.setViewVisibility(R.id.widget_1_loading, View.GONE)
+                views.setViewVisibility(R.id.widget_1_error, View.VISIBLE)
+
+                Log.e("TAG_suka", e.message.toString())
+                Log.e("TAG_suka", requestUrl)
+
+                val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
                 val currentTime = sdf.format(Date()).toString()
 
-                views.setTextViewText(R.id.widget_1_time, currentTime)
+                views.setTextViewText(R.id.widget_1_time_error, currentTime)
+
+                val updateIntent = Intent(context, NewAppWidget::class.java)
+                updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                updateIntent.putExtra(
+                    AppWidgetManager.EXTRA_APPWIDGET_IDS,
+                    appWidgetId
+                )
+                val pIntent = PendingIntent.getBroadcast(context, appWidgetId, updateIntent, PendingIntent.FLAG_IMMUTABLE)
+                views.setOnClickPendingIntent(R.id.widget_1_reload_error, pIntent)
+
                 appWidgetManager.updateAppWidget(appWidgetId, views)
             }
 
@@ -109,7 +146,7 @@ internal fun updateAppWidget(
                         views.setImageViewUri(R.id.widget_1_icon, uri)
                         views.setTextViewText(R.id.widget_1_text, currentTemperature)
 
-                        val sdf = SimpleDateFormat("hh:mm")
+                        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
                         val currentTime = sdf.format(Date()).toString()
 
                         views.setTextViewText(R.id.widget_1_time, currentTime)
@@ -118,11 +155,14 @@ internal fun updateAppWidget(
                         updateIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
                         updateIntent.putExtra(
                             AppWidgetManager.EXTRA_APPWIDGET_IDS,
-                            intArrayOf(appWidgetId)
+                            appWidgetId
                         )
                         val pIntent = PendingIntent.getBroadcast(context, appWidgetId, updateIntent, PendingIntent.FLAG_IMMUTABLE)
                         views.setOnClickPendingIntent(R.id.widget_1_reload, pIntent)
 
+                        views.setViewVisibility(R.id.widget_1_content, View.VISIBLE)
+                        views.setViewVisibility(R.id.widget_1_loading, View.GONE)
+                        views.setViewVisibility(R.id.widget_1_error, View.GONE)
                         appWidgetManager.updateAppWidget(appWidgetId, views)
                     }
                 }
