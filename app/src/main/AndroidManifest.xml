@@ -9,20 +9,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:logo="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyWeather">
-
-        <receiver
-            android:name=".NewAppWidget"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/new_app_widget_info" />
-        </receiver>
 
         <activity
             android:name=".SearchCityActivity"

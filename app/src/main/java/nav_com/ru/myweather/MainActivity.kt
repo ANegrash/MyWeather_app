@@ -116,10 +116,6 @@ class MainActivity : AppCompatActivity() {
         citySelector.text = currentCity
         setVisibleContent(0, 1, 0)
 
-        NewAppWidget().onUpdate(this, AppWidgetManager.getInstance(this), AppWidgetManager.getInstance(this).getAppWidgetIds(
-            ComponentName(this, NewAppWidget::class.java)
-        ))
-
         val ll = getCurrentLL(currentCity)
 
         val lang : String = if (Locale.getDefault().language == "en") "en" else "ru"
@@ -323,10 +319,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getTemperature(temp: Any) : String {
         val intTemp = temp.toString().toFloat().roundToInt()
-        return if (intTemp > 0)
-            "+$intTemp°"
-        else
-            "$intTemp°"
+        return "$intTemp°"
     }
 
     private fun getPressure(pressure: Any) : String {
@@ -402,7 +395,7 @@ class MainActivity : AppCompatActivity() {
         val swipeRefresh = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
         val swipeRefreshErr = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutErr)
         val imageView = findViewById<ImageView>(R.id.loadingImage)
-        imageView.setBackgroundResource(R.drawable.loading)
+        imageView.setBackgroundResource(R.drawable.loading_sun)
 
         val animationLoading : AnimationDrawable = imageView.background as AnimationDrawable
 

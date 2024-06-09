@@ -1,0 +1,7 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/w_01d" android:duration="200"/>
+    <item android:drawable="@drawable/w_04d" android:duration="200"/>
+    <item android:drawable="@drawable/w_01n" android:duration="200"/>
+    <item android:drawable="@drawable/w_04n" android:duration="200"/>
+</animation-list>

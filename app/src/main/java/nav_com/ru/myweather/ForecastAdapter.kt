@@ -178,10 +178,7 @@ class ForecastAdapter (
 
     private fun getTemperature(temp: Any) : String {
         val intTemp = temp.toString().toFloat().roundToInt()
-        return if (intTemp > 0)
-            "+$intTemp°"
-        else
-            "$intTemp°"
+        return "$intTemp°"
     }
 
     private fun getTrueDate(date: Any) : String {
